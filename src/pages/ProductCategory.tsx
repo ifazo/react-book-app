@@ -1,232 +1,50 @@
 import { Fragment, useState } from 'react'
-import { Dialog, Disclosure, Menu, Tab, Transition } from '@headlessui/react'
-import { ChevronDownIcon, FilterIcon, StarIcon } from '@heroicons/react/solid'
-import { IProduct } from '../provider/types/Types'
-import { Link } from 'react-router-dom'
-import ProductList from '../components/ProductList'
+import { Dialog, Disclosure, Menu, Popover, Transition } from '@headlessui/react'
+import { XIcon } from '@heroicons/react/outline'
+import { ChevronDownIcon, SearchIcon } from '@heroicons/react/solid'
 
-const navigation = {
-    categories: [
-        {
-            id: 'women',
-            name: 'Women',
-            featured: [
-                {
-                    name: 'New Arrivals',
-                    href: '#',
-                    imageSrc: 'https://tailwindui.com/img/ecommerce-images/mega-menu-category-01.jpg',
-                    imageAlt: 'Models sitting back to back, wearing Basic Tee in black and bone.',
-                },
-                {
-                    name: 'Basic Tees',
-                    href: '#',
-                    imageSrc: 'https://tailwindui.com/img/ecommerce-images/mega-menu-category-02.jpg',
-                    imageAlt: 'Close up of Basic Tee fall bundle with off-white, ochre, olive, and black tees.',
-                },
-                {
-                    name: 'Accessories',
-                    href: '#',
-                    imageSrc: 'https://tailwindui.com/img/ecommerce-images/mega-menu-category-03.jpg',
-                    imageAlt: 'Model wearing minimalist watch with black wristband and white watch face.',
-                },
-            ],
-            sections: [
-                [
-                    {
-                        id: 'shoes',
-                        name: 'Shoes & Accessories',
-                        items: [
-                            { name: 'Sneakers', href: '#' },
-                            { name: 'Boots', href: '#' },
-                            { name: 'Flats', href: '#' },
-                            { name: 'Sandals', href: '#' },
-                            { name: 'Heels', href: '#' },
-                            { name: 'Socks', href: '#' },
-                        ],
-                    },
-                    {
-                        id: 'collection',
-                        name: 'Shop Collection',
-                        items: [
-                            { name: 'Everything', href: '#' },
-                            { name: 'Core', href: '#' },
-                            { name: 'New Arrivals', href: '#' },
-                            { name: 'Sale', href: '#' },
-                            { name: 'Accessories', href: '#' },
-                        ],
-                    },
-                ],
-                [
-                    {
-                        id: 'clothing',
-                        name: 'All Clothing',
-                        items: [
-                            { name: 'Basic Tees', href: '#' },
-                            { name: 'Artwork Tees', href: '#' },
-                            { name: 'Tops', href: '#' },
-                            { name: 'Bottoms', href: '#' },
-                            { name: 'Swimwear', href: '#' },
-                            { name: 'Underwear', href: '#' },
-                        ],
-                    },
-                    {
-                        id: 'accessories',
-                        name: 'All Accessories',
-                        items: [
-                            { name: 'Watches', href: '#' },
-                            { name: 'Wallets', href: '#' },
-                            { name: 'Bags', href: '#' },
-                            { name: 'Sunglasses', href: '#' },
-                            { name: 'Hats', href: '#' },
-                            { name: 'Belts', href: '#' },
-                        ],
-                    },
-                ],
-                [
-                    {
-                        id: 'brands',
-                        name: 'Brands',
-                        items: [
-                            { name: 'Full Nelson', href: '#' },
-                            { name: 'My Way', href: '#' },
-                            { name: 'Re-Arranged', href: '#' },
-                            { name: 'Counterfeit', href: '#' },
-                            { name: 'Significant Other', href: '#' },
-                        ],
-                    },
-                ],
-            ],
-        },
-        {
-            id: 'men',
-            name: 'Men',
-            featured: [
-                {
-                    name: 'Accessories',
-                    href: '#',
-                    imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-03-category-01.jpg',
-                    imageAlt:
-                        'Wooden shelf with gray and olive drab green baseball caps, next to wooden clothes hanger with sweaters.',
-                },
-                {
-                    name: 'New Arrivals',
-                    href: '#',
-                    imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-04-detail-product-shot-01.jpg',
-                    imageAlt: 'Drawstring top with elastic loop closure and textured interior padding.',
-                },
-                {
-                    name: 'Artwork Tees',
-                    href: '#',
-                    imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-06.jpg',
-                    imageAlt:
-                        'Three shirts in gray, white, and blue arranged on table with same line drawing of hands and shapes overlapping on front of shirt.',
-                },
-            ],
-            sections: [
-                [
-                    {
-                        id: 'shoes',
-                        name: 'Shoes & Accessories',
-                        items: [
-                            { name: 'Sneakers', href: '#' },
-                            { name: 'Boots', href: '#' },
-                            { name: 'Sandals', href: '#' },
-                            { name: 'Socks', href: '#' },
-                        ],
-                    },
-                    {
-                        id: 'collection',
-                        name: 'Shop Collection',
-                        items: [
-                            { name: 'Everything', href: '#' },
-                            { name: 'Core', href: '#' },
-                            { name: 'New Arrivals', href: '#' },
-                            { name: 'Sale', href: '#' },
-                        ],
-                    },
-                ],
-                [
-                    {
-                        id: 'clothing',
-                        name: 'All Clothing',
-                        items: [
-                            { name: 'Basic Tees', href: '#' },
-                            { name: 'Artwork Tees', href: '#' },
-                            { name: 'Pants', href: '#' },
-                            { name: 'Hoodies', href: '#' },
-                            { name: 'Swimsuits', href: '#' },
-                        ],
-                    },
-                    {
-                        id: 'accessories',
-                        name: 'All Accessories',
-                        items: [
-                            { name: 'Watches', href: '#' },
-                            { name: 'Wallets', href: '#' },
-                            { name: 'Bags', href: '#' },
-                            { name: 'Sunglasses', href: '#' },
-                            { name: 'Hats', href: '#' },
-                            { name: 'Belts', href: '#' },
-                        ],
-                    },
-                ],
-                [
-                    {
-                        id: 'brands',
-                        name: 'Brands',
-                        items: [
-                            { name: 'Re-Arranged', href: '#' },
-                            { name: 'Counterfeit', href: '#' },
-                            { name: 'Full Nelson', href: '#' },
-                            { name: 'My Way', href: '#' },
-                        ],
-                    },
-                ],
-            ],
-        },
-    ],
-    pages: [
-        { name: 'Company', href: '#' },
-        { name: 'Stores', href: '#' },
-    ],
-}
-const filters = {
-    price: [
-        { value: '0', label: '$0 - $25', checked: false },
-        { value: '25', label: '$25 - $50', checked: false },
-        { value: '50', label: '$50 - $75', checked: false },
-        { value: '75', label: '$75+', checked: false },
-    ],
-    color: [
-        { value: 'white', label: 'White', checked: false },
-        { value: 'beige', label: 'Beige', checked: false },
-        { value: 'blue', label: 'Blue', checked: true },
-        { value: 'brown', label: 'Brown', checked: false },
-        { value: 'green', label: 'Green', checked: false },
-        { value: 'purple', label: 'Purple', checked: false },
-    ],
-    size: [
-        { value: 'xs', label: 'XS', checked: false },
-        { value: 's', label: 'S', checked: true },
-        { value: 'm', label: 'M', checked: false },
-        { value: 'l', label: 'L', checked: false },
-        { value: 'xl', label: 'XL', checked: false },
-        { value: '2xl', label: '2XL', checked: false },
-    ],
-    category: [
-        { value: 'all-new-arrivals', label: 'All New Arrivals', checked: false },
-        { value: 'tees', label: 'Tees', checked: false },
-        { value: 'objects', label: 'Objects', checked: false },
-        { value: 'sweatshirts', label: 'Sweatshirts', checked: false },
-        { value: 'pants-and-shorts', label: 'Pants & Shorts', checked: false },
-    ],
-}
 const sortOptions = [
-    { name: 'Most Popular', href: '#', current: true },
-    { name: 'Best Rating', href: '#', current: false },
-    { name: 'Newest', href: '#', current: false },
-    { name: 'Price: Low to High', href: '#', current: false },
-    { name: 'Price: High to Low', href: '#', current: false },
+    { name: 'Most Popular', href: '#' },
+    { name: 'Best Rating', href: '#' },
+    { name: 'Newest', href: '#' },
+]
+const filters = [
+    {
+        id: 'category',
+        name: 'Category',
+        options: [
+            { value: 'tees', label: 'Tees' },
+            { value: 'crewnecks', label: 'Crewnecks' },
+            { value: 'hats', label: 'Hats' },
+        ],
+    },
+    {
+        id: 'brand',
+        name: 'Brand',
+        options: [
+            { value: 'clothing-company', label: 'Clothing Company' },
+            { value: 'fashion-inc', label: 'Fashion Inc.' },
+            { value: 'shoes-n-more', label: "Shoes 'n More" },
+        ],
+    },
+    {
+        id: 'color',
+        name: 'Color',
+        options: [
+            { value: 'white', label: 'White' },
+            { value: 'black', label: 'Black' },
+            { value: 'grey', label: 'Grey' },
+        ],
+    },
+    {
+        id: 'sizes',
+        name: 'Sizes',
+        options: [
+            { value: 's', label: 'S' },
+            { value: 'm', label: 'M' },
+            { value: 'l', label: 'L' },
+        ],
+    },
 ]
 
 function classNames(...classes: string[]) {
@@ -234,14 +52,13 @@ function classNames(...classes: string[]) {
 }
 
 export default function ProductCategory() {
-
     const [ open, setOpen ] = useState(false)
 
     return (
-        <div className="bg-white">
-            {/* Mobile menu */}
+        <div className="bg-gray-50">
+            {/* Mobile filter dialog */}
             <Transition.Root show={open} as={Fragment}>
-                <Dialog as="div" className="fixed inset-0 flex z-40 lg:hidden" onClose={setOpen}>
+                <Dialog as="div" className="fixed inset-0 flex z-40 sm:hidden" onClose={setOpen}>
                     <Transition.Child
                         as={Fragment}
                         enter="transition-opacity ease-linear duration-300"
@@ -257,383 +74,228 @@ export default function ProductCategory() {
                     <Transition.Child
                         as={Fragment}
                         enter="transition ease-in-out duration-300 transform"
-                        enterFrom="-translate-x-full"
+                        enterFrom="translate-x-full"
                         enterTo="translate-x-0"
                         leave="transition ease-in-out duration-300 transform"
                         leaveFrom="translate-x-0"
-                        leaveTo="-translate-x-full"
+                        leaveTo="translate-x-full"
                     >
-                        <div className="relative max-w-xs w-full bg-white shadow-xl pb-12 flex flex-col overflow-y-auto">
-                            <div className="px-4 pt-5 pb-2 flex">
+                        <div className="ml-auto relative max-w-xs w-full h-full bg-white shadow-xl py-4 pb-6 flex flex-col overflow-y-auto">
+                            <div className="px-4 flex items-center justify-between">
+                                <h2 className="text-lg font-medium text-gray-900">Filters</h2>
                                 <button
                                     type="button"
-                                    className="-m-2 p-2 rounded-md inline-flex items-center justify-center text-gray-400"
+                                    className="-mr-2 w-10 h-10 bg-white p-2 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                     onClick={() => setOpen(false)}
                                 >
                                     <span className="sr-only">Close menu</span>
-                                    <div className="h-6 w-6" aria-hidden="true" >
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                    </div>
+                                    <XIcon className="h-6 w-6" aria-hidden="true" />
                                 </button>
                             </div>
 
-                            {/* Links */}
-                            <Tab.Group as="div" className="mt-2">
-                                <div className="border-b border-gray-200">
-                                    <Tab.List className="-mb-px flex px-4 space-x-8">
-                                        {navigation.categories.map((category) => (
-                                            <Tab
-                                                key={category.name}
-                                                className={({ selected }) =>
-                                                    classNames(
-                                                        selected ? 'text-indigo-600 border-indigo-600' : 'text-gray-900 border-transparent',
-                                                        'flex-1 whitespace-nowrap py-4 px-1 border-b-2 text-base font-medium'
-                                                    )
-                                                }
-                                            >
-                                                {category.name}
-                                            </Tab>
-                                        ))}
-                                    </Tab.List>
-                                </div>
-                                <Tab.Panels as={Fragment}>
-                                    {navigation.categories.map((category) => (
-                                        <Tab.Panel key={category.name} className="pt-10 pb-8 px-4 space-y-10">
-                                            <div className="space-y-4">
-                                                {category.featured.map((item, itemIdx) => (
-                                                    <div
-                                                        key={itemIdx}
-                                                        className="group relative aspect-w-1 aspect-h-1 rounded-md bg-gray-100 overflow-hidden"
-                                                    >
-                                                        <img
-                                                            src={item.imageSrc}
-                                                            alt={item.imageAlt}
-                                                            className="object-center object-cover group-hover:opacity-75"
-                                                        />
-                                                        <div className="flex flex-col justify-end">
-                                                            <div className="p-4 bg-white bg-opacity-60 text-base sm:text-sm">
-                                                                <a href={item.href} className="font-medium text-gray-900">
-                                                                    <span className="absolute inset-0" aria-hidden="true" />
-                                                                    {item.name}
-                                                                </a>
-                                                                <p aria-hidden="true" className="mt-0.5 text-gray-700 sm:mt-1">
-                                                                    Shop now
-                                                                </p>
+                            {/* Filters */}
+                            <form className="mt-4">
+                                {filters.map((section) => (
+                                    <Disclosure as="div" key={section.name} className="border-t border-gray-200 px-4 py-6">
+                                        {({ open }) => (
+                                            <>
+                                                <h3 className="-mx-2 -my-3 flow-root">
+                                                    <Disclosure.Button className="px-2 py-3 bg-white w-full flex items-center justify-between text-sm text-gray-400">
+                                                        <span className="font-medium text-gray-900">{section.name}</span>
+                                                        <span className="ml-6 flex items-center">
+                                                            <ChevronDownIcon
+                                                                className={classNames(open ? '-rotate-180' : 'rotate-0', 'h-5 w-5 transform')}
+                                                                aria-hidden="true"
+                                                            />
+                                                        </span>
+                                                    </Disclosure.Button>
+                                                </h3>
+                                                <Disclosure.Panel className="pt-6">
+                                                    <div className="space-y-6">
+                                                        {section.options.map((option, optionIdx) => (
+                                                            <div key={option.value} className="flex items-center">
+                                                                <input
+                                                                    id={`filter-mobile-${section.id}-${optionIdx}`}
+                                                                    name={`${section.id}[]`}
+                                                                    defaultValue={option.value}
+                                                                    type="checkbox"
+                                                                    className="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
+                                                                />
+                                                                <label
+                                                                    htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
+                                                                    className="ml-3 text-sm text-gray-500"
+                                                                >
+                                                                    {option.label}
+                                                                </label>
                                                             </div>
-                                                        </div>
+                                                        ))}
                                                     </div>
-                                                ))}
-                                            </div>
-                                            {category.sections.map((column, columnIdx) => (
-                                                <div key={columnIdx} className="space-y-10">
-                                                    {column.map((section) => (
-                                                        <div key={section.name}>
-                                                            <p
-                                                                id={`${category.id}-${section.id}-heading-mobile`}
-                                                                className="font-medium text-gray-900"
-                                                            >
-                                                                {section.name}
-                                                            </p>
-                                                            <ul
-                                                                role="list"
-                                                                aria-labelledby={`${category.id}-${section.id}-heading-mobile`}
-                                                                className="mt-6 flex flex-col space-y-6"
-                                                            >
-                                                                {section.items.map((item) => (
-                                                                    <li key={item.name} className="flow-root">
-                                                                        <a href={item.href} className="-m-2 p-2 block text-gray-500">
-                                                                            {item.name}
-                                                                        </a>
-                                                                    </li>
-                                                                ))}
-                                                            </ul>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            ))}
-                                        </Tab.Panel>
-                                    ))}
-                                </Tab.Panels>
-                            </Tab.Group>
-
-                            <div className="border-t border-gray-200 py-6 px-4 space-y-6">
-                                {navigation.pages.map((page) => (
-                                    <div key={page.name} className="flow-root">
-                                        <a href={page.href} className="-m-2 p-2 block font-medium text-gray-900">
-                                            {page.name}
-                                        </a>
-                                    </div>
+                                                </Disclosure.Panel>
+                                            </>
+                                        )}
+                                    </Disclosure>
                                 ))}
-                            </div>
-
-                            <div className="border-t border-gray-200 py-6 px-4">
-                                <a href="#" className="-m-2 p-2 flex items-center">
-                                    <img
-                                        src="https://tailwindui.com/img/flags/flag-canada.svg"
-                                        alt=""
-                                        className="w-5 h-auto block flex-shrink-0"
-                                    />
-                                    <span className="ml-3 block text-base font-medium text-gray-900">CAD</span>
-                                    <span className="sr-only">, change currency</span>
-                                </a>
-                            </div>
+                            </form>
                         </div>
                     </Transition.Child>
                 </Dialog>
             </Transition.Root>
 
-            <main className="pb-24">
-                <div className="text-center py-16 px-4 sm:px-6 lg:px-8">
-                    <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">Books</h1>
-                    <p className="mt-4 max-w-xl mx-auto text-base text-gray-500">
-                        All books are displayed here.
+            <div className="max-w-3xl mx-auto px-4 text-center sm:px-6 lg:max-w-7xl lg:px-8">
+                <div className="py-24">
+                    <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">New Arrivals</h1>
+                    <p className="mt-4 max-w-3xl mx-auto text-base text-gray-500">
+                        Thoughtfully designed objects for the workspace, home, and travel.
                     </p>
                 </div>
 
-                {/* Filters */}
-                <Disclosure
-                    as="section"
-                    aria-labelledby="filter-heading"
-                    className="relative z-10 border-t border-b border-gray-200 grid items-center"
-                >
+                <section aria-labelledby="filter-heading" className="border-t border-gray-200 py-6">
                     <h2 id="filter-heading" className="sr-only">
-                        Filters
+                        Product filters
                     </h2>
-                    <div className="relative col-start-1 row-start-1 py-4">
-                        <div className="max-w-7xl mx-auto flex space-x-6 divide-x divide-gray-200 text-sm px-4 sm:px-6 lg:px-8">
+
+                    <div className="flex items-center justify-between">
+                        <Menu as="div" className="relative z-10 inline-block text-left">
                             <div>
-                                <Disclosure.Button className="group text-gray-700 font-medium flex items-center">
-                                    <FilterIcon
-                                        className="flex-none w-5 h-5 mr-2 text-gray-400 group-hover:text-gray-500"
+                                <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                                    Sort
+                                    <ChevronDownIcon
+                                        className="flex-shrink-0 -mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500"
                                         aria-hidden="true"
                                     />
-                                    2 Filters
-                                </Disclosure.Button>
+                                </Menu.Button>
                             </div>
-                            <div className="pl-6">
-                                <Link to="/add" className="text-gray-500">
-                                    Add Book
-                                </Link>
-                            </div>
-                            <div>
-                                <label htmlFor="text" className="sr-only">
-                                    Search
-                                </label>
-                                <input
-                                    id="text"
-                                    name="text"
-                                    type="text"
-                                    className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                                    placeholder="Search"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <Disclosure.Panel className="border-t border-gray-200 py-10">
-                        <div className="max-w-7xl mx-auto grid grid-cols-2 gap-x-4 px-4 text-sm sm:px-6 md:gap-x-6 lg:px-8">
-                            <div className="grid grid-cols-1 gap-y-10 auto-rows-min md:grid-cols-2 md:gap-x-6">
-                                <fieldset>
-                                    <legend className="block font-medium">Price</legend>
-                                    <div className="pt-6 space-y-6 sm:pt-4 sm:space-y-4">
-                                        {filters.price.map((option, optionIdx) => (
-                                            <div key={option.value} className="flex items-center text-base sm:text-sm">
-                                                <input
-                                                    id={`price-${optionIdx}`}
-                                                    name="price[]"
-                                                    defaultValue={option.value}
-                                                    type="checkbox"
-                                                    className="flex-shrink-0 h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
-                                                    defaultChecked={option.checked}
-                                                />
-                                                <label htmlFor={`price-${optionIdx}`} className="ml-3 min-w-0 flex-1 text-gray-600">
-                                                    {option.label}
-                                                </label>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </fieldset>
-                                <fieldset>
-                                    <legend className="block font-medium">Color</legend>
-                                    <div className="pt-6 space-y-6 sm:pt-4 sm:space-y-4">
-                                        {filters.color.map((option, optionIdx) => (
-                                            <div key={option.value} className="flex items-center text-base sm:text-sm">
-                                                <input
-                                                    id={`color-${optionIdx}`}
-                                                    name="color[]"
-                                                    defaultValue={option.value}
-                                                    type="checkbox"
-                                                    className="flex-shrink-0 h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
-                                                    defaultChecked={option.checked}
-                                                />
-                                                <label htmlFor={`color-${optionIdx}`} className="ml-3 min-w-0 flex-1 text-gray-600">
-                                                    {option.label}
-                                                </label>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </fieldset>
-                            </div>
-                            <div className="grid grid-cols-1 gap-y-10 auto-rows-min md:grid-cols-2 md:gap-x-6">
-                                <fieldset>
-                                    <legend className="block font-medium">Size</legend>
-                                    <div className="pt-6 space-y-6 sm:pt-4 sm:space-y-4">
-                                        {filters.size.map((option, optionIdx) => (
-                                            <div key={option.value} className="flex items-center text-base sm:text-sm">
-                                                <input
-                                                    id={`size-${optionIdx}`}
-                                                    name="size[]"
-                                                    defaultValue={option.value}
-                                                    type="checkbox"
-                                                    className="flex-shrink-0 h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
-                                                    defaultChecked={option.checked}
-                                                />
-                                                <label htmlFor={`size-${optionIdx}`} className="ml-3 min-w-0 flex-1 text-gray-600">
-                                                    {option.label}
-                                                </label>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </fieldset>
-                                <fieldset>
-                                    <legend className="block font-medium">Category</legend>
-                                    <div className="pt-6 space-y-6 sm:pt-4 sm:space-y-4">
-                                        {filters.category.map((option, optionIdx) => (
-                                            <div key={option.value} className="flex items-center text-base sm:text-sm">
-                                                <input
-                                                    id={`category-${optionIdx}`}
-                                                    name="category[]"
-                                                    defaultValue={option.value}
-                                                    type="checkbox"
-                                                    className="flex-shrink-0 h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
-                                                    defaultChecked={option.checked}
-                                                />
-                                                <label htmlFor={`category-${optionIdx}`} className="ml-3 min-w-0 flex-1 text-gray-600">
-                                                    {option.label}
-                                                </label>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </fieldset>
-                            </div>
-                        </div>
-                    </Disclosure.Panel>
-                    <div className="col-start-1 row-start-1 py-4">
-                        <div className="flex justify-end max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                            <Menu as="div" className="relative inline-block">
-                                <div className="flex">
-                                    <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
-                                        Sort
-                                        <ChevronDownIcon
-                                            className="flex-shrink-0 -mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                                            aria-hidden="true"
-                                        />
-                                    </Menu.Button>
-                                </div>
 
-                                <Transition
-                                    as={Fragment}
-                                    enter="transition ease-out duration-100"
-                                    enterFrom="transform opacity-0 scale-95"
-                                    enterTo="transform opacity-100 scale-100"
-                                    leave="transition ease-in duration-75"
-                                    leaveFrom="transform opacity-100 scale-100"
-                                    leaveTo="transform opacity-0 scale-95"
+                            <Transition
+                                as={Fragment}
+                                enter="transition ease-out duration-100"
+                                enterFrom="transform opacity-0 scale-95"
+                                enterTo="transform opacity-100 scale-100"
+                                leave="transition ease-in duration-75"
+                                leaveFrom="transform opacity-100 scale-100"
+                                leaveTo="transform opacity-0 scale-95"
+                            >
+                                <Menu.Items className="origin-top-left absolute left-0 z-10 mt-2 w-40 rounded-md shadow-2xl bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                    <div className="py-1">
+                                        {sortOptions.map((option) => (
+                                            <Menu.Item key={option}>
+                                                {({ active }) => (
+                                                    <a
+                                                        href={option.href}
+                                                        className={classNames(
+                                                            active ? 'bg-gray-100' : '',
+                                                            'block px-4 py-2 text-sm font-medium text-gray-900'
+                                                        )}
+                                                    >
+                                                        {option.name}
+                                                    </a>
+                                                )}
+                                            </Menu.Item>
+                                        ))}
+                                    </div>
+                                </Menu.Items>
+                            </Transition>
+                        </Menu>
+
+
+
+                        <div className="min-w-0 flex-1 md:px-8 lg:px-0 xl:col-span-6">
+                            <div className="flex items-center px-6 py-4 md:max-w-3xl md:mx-auto lg:max-w-none lg:mx-0 xl:px-0">
+                                <button
+                                    type="button"
+                                    className="inline-flex items-center px-3 py-2 mx-3 my-2 border border-transparent text-sm leading-4 font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                 >
-                                    <Menu.Items className="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-2xl bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                        <div className="py-1">
-                                            {sortOptions.map((option) => (
-                                                <Menu.Item key={option.name}>
-                                                    {({ active }) => (
-                                                        <a
-                                                            href={option.href}
-                                                            className={classNames(
-                                                                option.current ? 'font-medium text-gray-900' : 'text-gray-500',
-                                                                active ? 'bg-gray-100' : '',
-                                                                'block px-4 py-2 text-sm'
-                                                            )}
-                                                        >
-                                                            {option.name}
-                                                        </a>
-                                                    )}
-                                                </Menu.Item>
-                                            ))}
+                                    Add
+                                </button>
+                                <div className="w-full">
+                                    <label htmlFor="search" className="sr-only">
+                                        Search
+                                    </label>
+                                    <div className="relative">
+                                        <div className="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center">
+                                            <SearchIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                                         </div>
-                                    </Menu.Items>
-                                </Transition>
-                            </Menu>
+                                        <input
+                                            id="search"
+                                            name="search"
+                                            className="block w-full bg-white border border-gray-300 rounded-md py-2 pl-10 pr-3 text-sm placeholder-gray-500 focus:outline-none focus:text-gray-900 focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                            placeholder="Search"
+                                            type="search"
+                                        />
+                                    </div>
+                                </div>
+                                <button
+                                    type="button"
+                                    className="inline-flex items-center px-3 py-2 mx-3 my-2 border border-transparent text-sm leading-4 font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                >
+                                    Search
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                </Disclosure>
 
-                {/* Product grid */}
-                <ProductList />
+                        <button
+                            type="button"
+                            className="inline-block text-sm font-medium text-gray-700 hover:text-gray-900 sm:hidden"
+                            onClick={() => setOpen(true)}
+                        >
+                            Filters
+                        </button>
 
-                {/* Pagination */}
-                <nav
-                    aria-label="Pagination"
-                    className="max-w-7xl mx-auto px-4 mt-6 flex justify-between text-sm font-medium text-gray-700 sm:px-6 lg:px-8"
-                >
-                    <div className="min-w-0 flex-1">
-                        <a
-                            href="#"
-                            className="inline-flex items-center px-4 h-10 border border-gray-300 rounded-md bg-white hover:bg-gray-100 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-offset-1 focus:ring-offset-indigo-600 focus:ring-indigo-600 focus:ring-opacity-25"
-                        >
-                            Previous
-                        </a>
-                    </div>
-                    <div className="hidden space-x-2 sm:flex">
-                        {/* Current: "border-indigo-600 ring-1 ring-indigo-600", Default: "border-gray-300" */}
-                        <a
-                            href="#"
-                            className="inline-flex items-center px-4 h-10 border border-gray-300 rounded-md bg-white hover:bg-gray-100 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-offset-1 focus:ring-offset-indigo-600 focus:ring-indigo-600 focus:ring-opacity-25"
-                        >
-                            1
-                        </a>
-                        <a
-                            href="#"
-                            className="inline-flex items-center px-4 h-10 border border-gray-300 rounded-md bg-white hover:bg-gray-100 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-offset-1 focus:ring-offset-indigo-600 focus:ring-indigo-600 focus:ring-opacity-25"
-                        >
-                            2
-                        </a>
-                        <a
-                            href="#"
-                            className="inline-flex items-center px-4 h-10 border border-indigo-600 ring-1 ring-indigo-600 rounded-md bg-white hover:bg-gray-100 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-offset-1 focus:ring-offset-indigo-600 focus:ring-indigo-600 focus:ring-opacity-25"
-                        >
-                            3
-                        </a>
-                        <span className="inline-flex items-center text-gray-500 px-1.5 h-10">...</span>
-                        <a
-                            href="#"
-                            className="inline-flex items-center px-4 h-10 border border-gray-300 rounded-md bg-white hover:bg-gray-100 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-offset-1 focus:ring-offset-indigo-600 focus:ring-indigo-600 focus:ring-opacity-25"
-                        >
-                            8
-                        </a>
-                        <a
-                            href="#"
-                            className="inline-flex items-center px-4 h-10 border border-gray-300 rounded-md bg-white hover:bg-gray-100 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-offset-1 focus:ring-offset-indigo-600 focus:ring-indigo-600 focus:ring-opacity-25"
-                        >
-                            9
-                        </a>
-                        <a
-                            href="#"
-                            className="inline-flex items-center px-4 h-10 border border-gray-300 rounded-md bg-white hover:bg-gray-100 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-offset-1 focus:ring-offset-indigo-600 focus:ring-indigo-600 focus:ring-opacity-25"
-                        >
-                            10
-                        </a>
-                    </div>
-                    <div className="min-w-0 flex-1 flex justify-end">
-                        <a
-                            href="#"
-                            className="inline-flex items-center px-4 h-10 border border-gray-300 rounded-md bg-white hover:bg-gray-100 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-offset-1 focus:ring-offset-indigo-600 focus:ring-indigo-600 focus:ring-opacity-25"
-                        >
-                            Next
-                        </a>
-                    </div>
-                </nav>
-            </main>
+                        <Popover.Group className="hidden sm:flex sm:items-baseline sm:space-x-8">
+                            {filters.map((section, sectionIdx) => (
+                                <Popover as="div" key={section.name} id="desktop-menu" className="relative z-10 inline-block text-left">
+                                    <div>
+                                        <Popover.Button className="group inline-flex items-center justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                                            <span>{section.name}</span>
+                                            {sectionIdx === 0 ? (
+                                                <span className="ml-1.5 rounded py-0.5 px-1.5 bg-gray-200 text-xs font-semibold text-gray-700 tabular-nums">
+                                                    1
+                                                </span>
+                                            ) : null}
+                                            <ChevronDownIcon
+                                                className="flex-shrink-0 -mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                                                aria-hidden="true"
+                                            />
+                                        </Popover.Button>
+                                    </div>
 
+                                    <Transition
+                                        as={Fragment}
+                                        enter="transition ease-out duration-100"
+                                        enterFrom="transform opacity-0 scale-95"
+                                        enterTo="transform opacity-100 scale-100"
+                                        leave="transition ease-in duration-75"
+                                        leaveFrom="transform opacity-100 scale-100"
+                                        leaveTo="transform opacity-0 scale-95"
+                                    >
+                                        <Popover.Panel className="origin-top-right absolute right-0 mt-2 bg-white rounded-md shadow-2xl p-4 ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                            <form className="space-y-4">
+                                                {section.options.map((option, optionIdx) => (
+                                                    <div key={option.value} className="flex items-center">
+                                                        <input
+                                                            id={`filter-${section.id}-${optionIdx}`}
+                                                            name={`${section.id}[]`}
+                                                            defaultValue={option.value}
+                                                            type="checkbox"
+                                                            className="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
+                                                        />
+                                                        <label
+                                                            htmlFor={`filter-${section.id}-${optionIdx}`}
+                                                            className="ml-3 pr-6 text-sm font-medium text-gray-900 whitespace-nowrap"
+                                                        >
+                                                            {option.label}
+                                                        </label>
+                                                    </div>
+                                                ))}
+                                            </form>
+                                        </Popover.Panel>
+                                    </Transition>
+                                </Popover>
+                            ))}
+                        </Popover.Group>
+                    </div>
+                </section>
+            </div>
         </div>
     )
 }

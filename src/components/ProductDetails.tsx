@@ -1,126 +1,83 @@
-import { StarIcon } from '@heroicons/react/solid'
-import { useParams } from 'react-router-dom'
-import { useGetProductByIdQuery } from '../provider/api/apiSlice'
-import { useState } from 'react'
-import Modal from './Modal'
-import { useAppSelector } from '../provider/hook'
-import axios from 'axios'
-import { toast } from 'react-hot-toast'
+// import { StarIcon } from '@heroicons/react/solid'
+// import { useParams } from 'react-router-dom'
+// import { useGetProductByIdQuery } from '../provider/api/apiSlice'
+// import { useState } from 'react'
+// import Modal from './Modal'
+// import { useAppSelector } from '../provider/hook'
+// import axios from 'axios'
+// import { toast } from 'react-hot-toast'
 
-const reviews = {
-    average: 4,
-    totalCount: 1624,
-}
+// const reviews = {
+//     average: 4,
+//     totalCount: 1624,
+// }
 
-function classNames(...classes: string[]) {
-    return classes.filter(Boolean).join(' ')
-}
+// function classNames(...classes: string[]) {
+//     return classes.filter(Boolean).join(' ')
+// }
 
 export default function ProductDetails() {
 
-    const { id } = useParams()
-    const [ open, setOpen ] = useState(false)
+    //     const { id } = useParams()
+    //     const [ open, setOpen ] = useState(false)
 
-    const { user } = useAppSelector(state => state.user)
-    const { data: product } = useGetProductByIdQuery(id as string)
-    // const [ postStatus ] = usePostStatusMutation()
+    //     const { user } = useAppSelector(state => state.user)
+    //     const { data: product } = useGetProductByIdQuery(id as string)
+    //     // const [ postStatus ] = usePostStatusMutation()
 
-    const handleStatus = async () => {
-        const status = {
-            bookId: product?._id,
-            title: product?.title,
-            author: product?.author,
-            genre: product?.genre,
-            email: user.email,
-            status: 'wishlist',
-        };
-        // await postStatus(status)
-        try {
-            axios.post('http://localhost:5000/api/book/status', status)
-                .then(() => {
-                    toast.success('Added to wishlist');
-                })
-                .catch(() => {
-                    toast.error('Something went wrong');
-                });
-        } catch (error) {
-            toast.error('Failed to add to wishlist');
-        }
-    };
+    //     const handleStatus = async () => {
+    //         const status = {
+    //             bookId: product?._id,
+    //             title: product?.title,
+    //             author: product?.author,
+    //             genre: product?.genre,
+    //             email: user.email,
+    //             status: 'wishlist',
+    //         };
+    //         // await postStatus(status)
+    //         try {
+    //             axios.post('http://localhost:5000/api/book/status', status)
+    //                 .then(() => {
+    //                     toast.success('Added to wishlist');
+    //                 })
+    //                 .catch(() => {
+    //                     toast.error('Something went wrong');
+    //                 });
+    //         } catch (error) {
+    //             toast.error('Failed to add to wishlist');
+    //         }
+    //     };
 
     return (
-        <div className="bg-white">
-            <div className="px-5 lg:grid lg:grid-rows-1 lg:grid-cols-7 lg:gap-x-8 lg:gap-y-10 xl:gap-x-16">
-                {/* Product image */}
-                <div className="lg:row-end-1 lg:col-span-4">
-                    <div className="aspect-w-1 aspect-h-1 rounded-lg bg-gray-100 overflow-hidden">
-                        <img src={product?.imgUrl} alt={"product"} className="object-center object-cover" />
+        <section className="bg-white dark:bg-gray-900">
+            <div className="py-8 px-4 mx-auto max-w-2xl lg:py-16">
+                <h2 className="mb-2 text-xl font-semibold leading-none text-gray-900 md:text-2xl dark:text-white">Apple iMac Guide</h2>
+                <p className="mb-4 text-xl font-extrabold leading-none text-gray-900 md:text-2xl dark:text-white">$2999</p>
+                <dl>
+                    <dt className="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Details</dt>
+                    <dd className="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">Standard glass ,3.8GHz 8-core 10th-generation Intel Core i7 processor, Turbo Boost up to 5.0GHz, 16GB 2666MHz DDR4 memory, Radeon Pro 5500 XT with 8GB of GDDR6 memory, 256GB SSD storage, Gigabit Ethernet, Magic Mouse 2, Magic Keyboard - US.</dd>
+                </dl>
+                <dl className="flex items-center space-x-6">
+                    <div>
+                        <dt className="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Genre</dt>
+                        <dd className="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">Science</dd>
                     </div>
-                </div>
-                {/* Product details */}
-                <div className="max-w-2xl mx-auto mt-14 sm:mt-16 lg:max-w-none lg:mt-0 lg:row-end-2 lg:row-span-2 lg:col-span-3">
-
-                    <div className="flex flex-col">
-                        <div className="my-4">
-                            <h1 className="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl">Book Name</h1>
-                        </div>
-
+                    <div>
+                        <dt className="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Publication Date</dt>
+                        <dd className="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">12/08/99</dd>
                     </div>
-                    <div className="border-t border-gray-200 mt-10 pt-10">
-                        <h3 className="text-lg font-medium text-gray-900">Author : {product?.author}</h3>
-                        <h3 className="text-lg font-medium text-gray-900">Genre : {product?.genre}</h3>
-                        <h3 className="text-lg font-medium text-gray-900">Publication Date : {product?.genre}</h3>
-                        <div className="mt-3 flex items-center">
-                            <h3 className="text-lg font-medium text-gray-900">Book Reviews :</h3>
-                            <div>
-                                <div className="flex items-center">
-                                    {[ 0, 1, 2, 3, 4 ].map((rating) => (
-                                        <StarIcon
-                                            key={rating}
-                                            className={classNames(
-                                                reviews.average > rating ? 'text-yellow-400' : 'text-gray-300',
-                                                'flex-shrink-0 h-5 w-5'
-                                            )}
-                                            aria-hidden="true"
-                                        />
-                                    ))}
-                                </div>
-                                <p className="sr-only">{reviews.average} out of 5 stars</p>
-                            </div>
-                            <p className="ml-2 text-sm font-medium text-gray-900">Based on {reviews.totalCount} reviews</p>
-                        </div>
-
-                    </div>
-                    <p className="text-gray-500 mt-6">{product?.description}</p>
-
-                    <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
-                        <button
-                            type="button"
-                            className="w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
-                        >
-                            Pay ${product?.price}
-                        </button>
-                        <button
-                            onClick={() => handleStatus()}
-                            type="button"
-                            className="w-full bg-indigo-50 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-indigo-700 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
-                        >
-                            Add to WishList
-                        </button>
-                    </div>
-
-                    <div className="mt-10">
-                        <h3 className="text-lg font-medium text-gray-900">Share your thoughts</h3>
-                        <p className="mt-1 text-sm text-gray-600">
-                            If you’ve used this product, share your thoughts with other customers
-                        </p>
-                        <button onClick={() => setOpen(!open)} className="mt-6 inline-flex w-full bg-white border border-gray-300 rounded-md py-2 px-8 items-center justify-center text-sm font-medium text-gray-900 hover:bg-gray-50 sm:w-auto lg:w-full">
-                            Write a review
-                        </button>
-                        <Modal open={open} setOpen={setOpen} product={product} />
-                    </div>
+                </dl>
+                <div className="flex items-center space-x-4">
+                    <button type="button" className="text-white inline-flex items-center bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                        <svg aria-hidden="true" className="mr-1 -ml-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path></svg>
+                        Edit
+                    </button>
+                    <button type="button" className="inline-flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">
+                        <svg aria-hidden="true" className="w-5 h-5 mr-1.5 -ml-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+                        Delete
+                    </button>
                 </div>
             </div>
-        </div>
+        </section>
     )
 }
