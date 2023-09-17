@@ -19,23 +19,24 @@ export default function SignIn() {
 
   const dispatch = useAppDispatch();
 
-
   const onSubmit = (data: LoginFormInputs) => {
     void dispatch(loginUser({ email: data.email, password: data.password })).then(() => {
-          toast.success("Login User Successfully");
-        }).catch((error) => {
-          toast.error(error as string);
-        });
+      toast.success("Login User Successfully");
+    }).catch((error) => {
+      toast.error(error.message as string);
+    });
   };
 
   const handleGoogleLogin = () => {
-    toast.loading("Loading...")
-    void dispatch(googleLogin())
-    window.location.href = "/"
+    void dispatch(googleLogin()).then(() => {
+      toast.success("Login User Successfully");
+    }).catch((error) => {
+      toast.error(error.message as string);
+    });
   }
 
   return (
-    <div className="h-full bg-white">
+    <div className="bg-white">
       {/* 
         This example requires updating your template:
 
@@ -94,8 +95,8 @@ export default function SignIn() {
                   autoComplete="password"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   {...register("password", { required: true })}
-                  />
-                  {errors.password && <span>Password field is required</span>}
+                />
+                {errors.password && <span>Password field is required</span>}
               </div>
             </div>
 

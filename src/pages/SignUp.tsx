@@ -2,7 +2,6 @@ import { useForm } from "react-hook-form"
 import { useAppDispatch } from "../provider/hook";
 import { createUser, googleLogin } from "../provider/features/userSlice";
 import { toast } from "react-hot-toast";
-import axios from "axios";
 import { Link } from "react-router-dom";
 
 interface IFormInput {
@@ -18,27 +17,23 @@ export default function SignUp() {
   const { register, handleSubmit, formState: { errors } } = useForm<IFormInput>()
 
   const onSubmit = async (data: IFormInput) => {
-    try {
-      await dispatch(createUser({ name: data.name, email: data.email, password: data.password }));
-      toast.loading("Loading...");
-      const response = await axios.post('http://localhost:5000/user/create', {
-          name: data.name,
-          email: data.email,
-          password: data.password
-        });
+    void dispatch(createUser({ email: data.email, password: data.password })).then(() => {
       toast.success("User created successfully!");
-      console.log(response);
-    } catch (error) {
+    }).catch((error) => {
       toast.error(error as string);
-    }
+    })
   };
 
   const handleGoogleLogin = () => {
-    void dispatch(googleLogin())
+    void dispatch(googleLogin()).then(() => {
+      toast.success("User created Successfully");
+    }).catch((error) => {
+      toast.error(error as string);
+    });
   }
 
   return (
-    <div className="h-full bg-white">
+    <div className="bg-white">
       {/*
         This example requires updating your template:
 

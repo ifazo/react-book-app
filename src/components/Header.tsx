@@ -1,16 +1,16 @@
 import { Disclosure } from '@headlessui/react'
 import { useAppDispatch, useAppSelector } from '../provider/hook'
 import { signOut } from 'firebase/auth'
-import { auth } from '../firebase/firebase.config'
+import { auth } from '../config/firebase.config'
 import { setUser } from '../provider/features/userSlice'
 import { toast } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
-}
+// function classNames(...classes: string[]) {
+//   return classes.filter(Boolean).join(' ')
+// }
 
-export default function Example() {
+export default function Header() {
 
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
@@ -83,7 +83,7 @@ export default function Example() {
               </div>
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  {user.email ? (<button
+                  {user && user ? (<button
                     type="button"
                     onClick={() => handleSignOut()}
                     className="relative inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

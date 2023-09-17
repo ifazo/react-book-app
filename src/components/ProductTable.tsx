@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom"
 import { useAppSelector } from "../provider/hook";
 import { useGetProductByUserQuery } from "../provider/api/apiSlice";
-import { useState, useRef } from "react";
 import { IProduct } from "../provider/types/Types";
 import axios from "axios";
 import { toast } from "react-hot-toast";
@@ -12,7 +11,7 @@ export default function ProductTable() {
     const email = user.email
     const { data: products } = useGetProductByUserQuery(email as string)
 
-    const [ open, setOpen ] = useState(false)
+    // const [ open, setOpen ] = useState(false)
     // const cancelButtonRef = useRef(null)
 
     const handleDelete = (id: string) => {

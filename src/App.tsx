@@ -6,7 +6,7 @@ import { Toaster } from 'react-hot-toast';
 import { useAppDispatch } from './provider/hook.js';
 import { onAuthStateChanged } from 'firebase/auth';
 import { setLoading, setUser } from './provider/features/userSlice.js';
-import { auth } from './firebase/firebase.config.js';
+import { auth } from './config/firebase.config.js';
 
 export default function App() {
 
