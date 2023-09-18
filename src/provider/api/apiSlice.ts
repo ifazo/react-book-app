@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
 import type { IProduct, IReview } from "../types/Types";
 
 export const api = createApi({
@@ -14,6 +14,9 @@ export const api = createApi({
         url: "/books",
         method: "POST",
         body,
+        headers: {
+          // Authorization: `Bearer ${token}`,
+        },
       }),
       invalidatesTags: ["Book"],
     }),
@@ -72,6 +75,7 @@ export const {
   useGetStatusByUserQuery,
   usePostStatusMutation,
   usePostReviewMutation,
+  usePostProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
 } = api;

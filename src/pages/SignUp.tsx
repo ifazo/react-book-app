@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form"
-import { useAppDispatch } from "../provider/hook";
+import { useAppDispatch, useAppSelector } from "../provider/hook";
 import { createUser, googleLogin } from "../provider/features/userSlice";
 import { toast } from "react-hot-toast";
 import { Link } from "react-router-dom";
@@ -13,7 +13,8 @@ interface IFormInput {
 export default function SignUp() {
 
   const dispatch = useAppDispatch();
-
+  const { user } = useAppSelector((state) => state.user);
+  console.log(user);
   const { register, handleSubmit, formState: { errors } } = useForm<IFormInput>()
 
   const onSubmit = async (data: IFormInput) => {

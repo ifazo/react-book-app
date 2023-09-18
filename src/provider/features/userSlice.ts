@@ -10,10 +10,8 @@ import {
 
 interface IUserState {
   user: object | null;
-  isLoading: boolean;
-  isError: boolean;
+  error: boolean | string | null;
   loading: boolean;
-  error: string | null;
 }
 
 interface ICredential {
@@ -23,8 +21,6 @@ interface ICredential {
 
 const initialState: IUserState = {
   user: null,
-  isLoading: false,
-  isError: false,
   loading: false,
   error: null,
 };
@@ -59,64 +55,66 @@ const userSlice = createSlice({
       state.user = action.payload;
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
-      state.isLoading = action.payload;
+      state.loading = action.payload;
+    },
+    setError: (state, action: PayloadAction<boolean | string | null>) => {
+      state.error = action.payload;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(createUser.pending, (state) => {
-        state.isLoading = true;
-        state.isError = false;
-        state.error = null;
+        state.user = null;
+        state.loading = true;
+        state.error = false;
       })
       .addCase(createUser.fulfilled, (state, action) => {
         state.user = action.payload;
-        state.isLoading = false;
+        state.loading = false;
+        state.error = null;
       })
       .addCase(createUser.rejected, (state, action) => {
         state.user = null;
-        state.isLoading = false;
-        state.isError = true;
+        state.loading = false;
         state.error = action.error.message!;
       });
     
     builder
       .addCase(loginUser.pending, (state) => {
-        state.isLoading = true;
-        state.isError = false;
-        state.error = null;
+        state.user = null;
+        state.loading = true;
+        state.error = false;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.user = action.payload;
-        state.isLoading = false;
+        state.loading = false;
+        state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.user = null;
-        state.isLoading = false;
-        state.isError = true;
+        state.loading = false;
         state.error = action.error.message!;
-        console.error(action.error);
       });
+    
       builder
       .addCase(googleLogin.pending, (state) => {
-        state.isLoading = true;
-        state.isError = false;
-        state.error = null;
+        state.user = null;
+        state.loading = true;
+        state.error = false;
       })
       .addCase(googleLogin.fulfilled, (state, action) => {
         state.user = action.payload;
-        state.isLoading = false;
+        state.loading = false;
+        state.error = null;
       })
       .addCase(googleLogin.rejected, (state, action) => {
         state.user = null;
-        state.isLoading = false;
-        state.isError = true;
+        state.loading = false;
         state.error = action.error.message!;
-        console.error(action.error);
       });
   },
 });
 
-export const { setUser, setLoading } = userSlice.actions;
+export const { setUser, setLoading, setError } = userSlice.actions;
 
 export default userSlice.reducer;

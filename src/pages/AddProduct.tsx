@@ -1,26 +1,29 @@
-import { useForm, SubmitHandler } from "react-hook-form"
-import { IProduct } from "../provider/types/Types"
 import axios from "axios";
 import { useAppSelector } from '../provider/hook';
 import { toast } from "react-hot-toast";
 
-const imgToken = import.meta.env.VITE_IMGBB_TOKEN
 
 export default function AddProduct() {
-
     const { user } = useAppSelector((state) => state.user);
+    console.log(user)
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm<IProduct>()
+    const handleAddProduct = (e) => {
+        e.preventDefault()
+        const data = {
+            username: e.target.username.value,
+            email: e.target.email.value,
+            title: e.target.title.value,
+            author: e.target.author.value,
+            date: e.target.date.value,
+            description: e.target.description.value,
+            genre: e.target.genre.value,
+            image: e.target.image.files
+        }
 
-    const imgHostUrl = `https://api.imgbb.com/1/upload?key=${imgToken}`
-
-    const onSubmit: SubmitHandler<IProduct> = (data) => {
-
+        const imgToken = import.meta.env.VITE_IMGBB_TOKEN
+        const imgHostUrl = `https://api.imgbb.com/1/upload?key=${imgToken}`
         const formData = new FormData()
+        console.log(formData)
         formData.append('image', data.image[ 0 ])
         fetch(imgHostUrl, {
             method: 'POST',
@@ -28,32 +31,25 @@ export default function AddProduct() {
         })
             .then(res => res.json())
             .then(res => {
-                if (res.data) {
                     const imgUrl = res.data?.display_url;
-                    const { username, email, title, author, date, description, genre } = data;
-                    const newData = { username, email, title, author, date, description, genre, imgUrl }
-                    toast.loading("Uploading Book...")
+                    const newData = { ...data, imgUrl }
                     try {
                         axios.post('http://localhost:5000/api/books', newData)
                             .then(() => {
                                 toast.success("Book uploaded successfully")
-                                window.location.href = "/"
                             })
                             .catch(() => {
                                 toast.error("Failed to upload Book")
-                                window.location.href = "/"
                             })
                     } catch (error) {
                         console.log(error)
                     }
-                }
             })
             .catch(err => console.log('Error during ImgBB API request:', err))
-
     }
 
     return (
-        <form className="p-10" onSubmit={handleSubmit(onSubmit)}>
+        <form className="p-10" onSubmit={handleAddProduct}>
             <div className="space-y-12">
                 <h2 className="text-center font-bold text-gray-900">Add Book Info</h2>
 
@@ -68,10 +64,10 @@ export default function AddProduct() {
                                 <input
                                     type="text"
                                     id="username"
+                                    name="username"
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                    defaultValue={user.name}
-                                    readOnly
-                                    {...register("username", { required: true })}
+                                    // defaultValue={user.name}
+                                // readOnly
                                 />
                             </div>
                         </div>
@@ -83,11 +79,11 @@ export default function AddProduct() {
                             <div className="mt-2">
                                 <input
                                     id="email"
+                                    name="email"
                                     type="email"
-                                    defaultValue={user.email}
-                                    readOnly
+                                    // defaultValue={user.email}
+                                    // readOnly
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                    {...register("email", { required: true })}
                                 />
                             </div>
                         </div>
@@ -99,10 +95,9 @@ export default function AddProduct() {
                             <div className="mt-2">
                                 <input
                                     id="title"
+                                    name="title"
                                     type="text"
-                                    autoComplete="title"
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                    {...register("title", { required: true })}
                                 />
                             </div>
                         </div>
@@ -114,10 +109,9 @@ export default function AddProduct() {
                             <div className="mt-2">
                                 <input
                                     id="author"
+                                    name="author"
                                     type="text"
-                                    autoComplete="author"
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                    {...register("author", { required: true })}
                                 />
                             </div>
                         </div>
@@ -129,10 +123,9 @@ export default function AddProduct() {
                             <div className="mt-2">
                                 <input
                                     id="date"
+                                    name="date"
                                     type="text"
-                                    autoComplete="date"
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                    {...register("date", { required: true })}
                                 />
                             </div>
                         </div>
@@ -144,10 +137,10 @@ export default function AddProduct() {
                             <div className="mt-2">
                                 <textarea
                                     id="description"
+                                    name="description"
                                     placeholder="Write a few sentences about the product."
                                     rows={3}
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                    {...register("description", { required: true })}
                                 />
                             </div>
                         </div>
@@ -170,11 +163,11 @@ export default function AddProduct() {
                                             className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
                                         >
                                             <span>Upload a image</span>
-                                            <input id="image" type="file" className="sr-only" {...register("image")} />
+                                            <input id="image" name="image" type="file" className="sr-only" />
                                         </label>
                                         <p className="pl-1">or drag and drop</p>
                                     </div>
-                                    <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
+                                    <p className="text-xs leading-5 text-gray-600">One image up to 10MB</p>
                                 </div>
                             </div>
                         </div>
@@ -186,9 +179,8 @@ export default function AddProduct() {
                             <div className="mt-2">
                                 <select
                                     id="genre"
-                                    autoComplete="genre"
+                                    name="genre"
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-                                    {...register("genre", { required: true })}
                                 >
                                     <option>Science Fiction</option>
                                     <option>Horror</option>

@@ -1,3 +1,12 @@
+export interface IAuth {
+  _id: string;
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+  date: string;
+}
+
 export interface IProduct {
   _id: string;
   username: string;
@@ -26,9 +35,10 @@ export interface IReview {
 
 export interface IStatus {
   _id: string;
-  email: string;
   status: string;
   bookId: string;
+  userId: string;
+  email: string;
   title: string;
   author: string;
   genre: string;

@@ -1,8 +1,9 @@
 import { useForm } from "react-hook-form"
 import { Link } from "react-router-dom"
-import { useAppDispatch } from "../provider/hook";
+import { useAppDispatch, useAppSelector } from "../provider/hook";
 import { googleLogin, loginUser } from "../provider/features/userSlice";
 import { toast } from "react-hot-toast";
+// import { useLoginUserMutation } from "../provider/api/authSlice";
 
 interface LoginFormInputs {
   email: string
@@ -18,6 +19,9 @@ export default function SignIn() {
   } = useForm<LoginFormInputs>();
 
   const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.user);
+  console.log(user);
+  // const {data} = useLoginUserMutation()
 
   const onSubmit = (data: LoginFormInputs) => {
     void dispatch(loginUser({ email: data.email, password: data.password })).then(() => {
