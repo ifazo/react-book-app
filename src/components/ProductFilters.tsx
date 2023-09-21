@@ -2,6 +2,7 @@ import { Fragment, useState } from 'react'
 import { Dialog, Disclosure, Menu, Popover, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
 import { ChevronDownIcon, SearchIcon } from '@heroicons/react/solid'
+import { Link } from 'react-router-dom'
 
 const sortOptions = [
     { name: 'Most Popular', href: '#' },
@@ -205,7 +206,7 @@ export default function ProductFilters() {
                                     type="button"
                                     className="inline-flex items-center px-3 py-2 mx-3 my-2 border border-transparent text-sm leading-4 font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                 >
-                                    Add
+                                    <Link to="/add">Add</Link>
                                 </button>
                                 <div className="w-full">
                                     <label htmlFor="search" className="sr-only">

@@ -1,12 +1,26 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
-import type { IProduct, IReview } from "../types/Types";
+import type { IAuth, IProduct, IReview } from "../types/Types";
 
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000/api" }),
   tagTypes: ["Book"],
   endpoints: (builder) => ({
-    getProducts: builder.query<IProduct, string>({
+    createUser: builder.mutation<IAuth, IAuth>({
+      query: (body) => ({
+        url: "/auth/user/create",
+        method: "POST",
+        body,
+      }),
+    }),
+    loginUser: builder.mutation<IAuth, IAuth>({
+      query: (body) => ({
+        url: "/auth/user/login",
+        method: "POST",
+        body,
+      }),
+    }),
+    getProducts: builder.query<IProduct[], string>({
       query: () => "/books",
     }),
     postProduct: builder.mutation<IProduct, IProduct>({
@@ -67,6 +81,8 @@ export const api = createApi({
 });
 
 export const {
+  useCreateUserMutation,
+  useLoginUserMutation,
   useGetProductsQuery,
   useGetSearchProductsQuery,
   useGetProductByIdQuery,

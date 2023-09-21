@@ -26,25 +26,25 @@ const initialState: IUserState = {
 };
 
 export const createUser = createAsyncThunk(
-  "auth/user/create",
+  "/auth/user/create",
   async ({ email, password }: ICredential) => {
     const data = await createUserWithEmailAndPassword(auth, email, password);
-    return data;
+    return data.user;
   }
 );
 
 export const loginUser = createAsyncThunk(
-  "auth/user/login",
+  "/auth/user/login",
   async ({ email, password }: ICredential) => {
     const data = await signInWithEmailAndPassword(auth, email, password);
-    return data;
+    return data.user;
   }
 );
 
-export const googleLogin = createAsyncThunk("user/login/google", async () => {
+export const googleLogin = createAsyncThunk("/auth/user/login/google", async () => {
   const googleProvider = new GoogleAuthProvider();
   const data = await signInWithPopup(auth, googleProvider);
-  return data;
+  return data.user;
 });
 
 const userSlice = createSlice({
