@@ -37,7 +37,7 @@ import { IProduct } from "../provider/types/Types"
 export default function ProductList() {
 
     const { data: products } = useGetProductsQuery("")
-    console.log(products)
+    // console.log(products)
 
     return (
         <div className="bg-white">
