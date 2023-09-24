@@ -1,4 +1,4 @@
-import( "tailwindcss" ).Config;
+import("tailwindcss").Config;
 import defaultTheme from "tailwindcss/defaultTheme";
 
 export default {
@@ -18,5 +18,6 @@ export default {
     "prettier-plugin-tailwindcss",
     "@tailwindcss/forms",
     "@tailwindcss/aspect-ratio",
+    "@tailwindcss/typography",
   ],
 };

@@ -1,115 +1,103 @@
-import axios from "axios";
 import { useAppSelector } from '../provider/hook';
 import { toast } from "react-hot-toast";
+import { usePostProductMutation } from "../provider/api/apiSlice";
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { IProduct } from '../provider/types/Types';
 
 
 export default function AddProduct() {
+
     const { user } = useAppSelector((state) => state.user);
     console.log(user)
+    const [ postProduct, { isError, isLoading, isSuccess } ] = usePostProductMutation();
+    console.log(isError, isLoading, isSuccess)
 
-    const handleAddProduct = (e) => {
-        e.preventDefault()
-        const data = {
-            username: e.target.username.value,
-            email: e.target.email.value,
-            title: e.target.title.value,
-            author: e.target.author.value,
-            date: e.target.date.value,
-            description: e.target.description.value,
-            genre: e.target.genre.value,
-            image: e.target.image.files
-        }
+    const { register, handleSubmit, formState: { errors } } = useForm<IProduct>()
 
+    const onSubmit: SubmitHandler<IProduct> = (data) => {
+        console.log(data)
         const imgToken = import.meta.env.VITE_IMGBB_TOKEN
         const imgHostUrl = `https://api.imgbb.com/1/upload?key=${imgToken}`
-        const formData = new FormData()
-        console.log(formData)
-        formData.append('image', data.image[ 0 ])
         fetch(imgHostUrl, {
             method: 'POST',
-            body: formData
+            body: data.image
         })
             .then(res => res.json())
             .then(res => {
-                    const imgUrl = res.data?.display_url;
-                    const newData = { ...data, imgUrl }
-                    try {
-                        axios.post('http://localhost:5000/api/books', newData)
-                            .then(() => {
-                                toast.success("Book uploaded successfully")
-                            })
-                            .catch(() => {
-                                toast.error("Failed to upload Book")
-                            })
-                    } catch (error) {
-                        console.log(error)
-                    }
+                const imgUrl = res.data?.display_url;
+                data.image = imgUrl;
+                postProduct(data)
             })
-            .catch(err => console.log('Error during ImgBB API request:', err))
-    }
+            .then(res => {
+                console.log(res)
+                toast.success('Product added successfully')
+            })
+            .catch(err => {
+                console.log(err)
+                toast.error('Something went wrong')
+            })
+    };
 
     return (
-        <form className="p-10" onSubmit={handleAddProduct}>
+        <form className="p-10" onSubmit={handleSubmit(onSubmit)}>
             <div className="space-y-12">
                 <h2 className="text-center font-bold text-gray-900">Add Book Info</h2>
-
                 <div className="border-y border-gray-900/10 pb-12">
                     <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-
-                        <div className="sm:col-span-3">
-                            <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">
-                                Username
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    type="text"
-                                    id="username"
-                                    name="username"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                    // defaultValue={user.name}
-                                // readOnly
-                                />
-                            </div>
-                        </div>
-
-                        <div className="sm:col-span-3">
-                            <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                                Email
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    // defaultValue={user.email}
-                                    // readOnly
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                />
-                            </div>
-                        </div>
-
                         <div className="col-span-full">
                             <label htmlFor="title" className="block text-sm font-medium leading-6 text-gray-900">
                                 Book title
                             </label>
+                            {errors.title && <span>Title field is required</span>}
                             <div className="mt-2">
                                 <input
                                     id="title"
-                                    name="title"
+                                    {...register("title", { required: true })}
                                     type="text"
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
-
+                        <div className="sm:col-span-3">
+                            <label htmlFor="price" className="block text-sm font-medium leading-6 text-gray-900">
+                                Price
+                            </label>
+                            {errors.price && <span>Price field is required</span>}
+                            <div className="mt-2">
+                                <input
+                                    id="price"
+                                    {...register("price", { required: true })}
+                                    type="text"
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                />
+                            </div>
+                        </div>
+                        <div className="sm:col-span-3">
+                            <label htmlFor="genre" className="block text-sm font-medium leading-6 text-gray-900">
+                                Genre
+                            </label>
+                            {errors.genre && <span>Genre field is required</span>}
+                            <div className="mt-2">
+                                <select
+                                    id="genre"
+                                    {...register("genre", { required: true })}
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                                >
+                                    <option>Science Fiction</option>
+                                    <option>Horror</option>
+                                    <option>Romantic</option>
+                                </select>
+                            </div>
+                        </div>
                         <div className="sm:col-span-3">
                             <label htmlFor="author" className="block text-sm font-medium leading-6 text-gray-900">
                                 Author name
                             </label>
+                            {errors.author && <span>Author field is required</span>}
                             <div className="mt-2">
                                 <input
                                     id="author"
-                                    name="author"
+                                    {...register("author", { required: true })}
                                     type="text"
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />
@@ -120,10 +108,11 @@ export default function AddProduct() {
                             <label htmlFor="date" className="block text-sm font-medium leading-6 text-gray-900">
                                 Publication Date
                             </label>
+                            {errors.date && <span>Date field is required</span>}
                             <div className="mt-2">
                                 <input
                                     id="date"
-                                    name="date"
+                                    {...register("date", { required: true })}
                                     type="text"
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />
@@ -134,10 +123,11 @@ export default function AddProduct() {
                             <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900">
                                 Description
                             </label>
+                            {errors.description && <span>Description field is required</span>}
                             <div className="mt-2">
                                 <textarea
                                     id="description"
-                                    name="description"
+                                    {...register("description", { required: true })}
                                     placeholder="Write a few sentences about the product."
                                     rows={3}
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -162,8 +152,12 @@ export default function AddProduct() {
                                             htmlFor="image"
                                             className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
                                         >
+                                            {errors.image && <span>Image field is required</span>}
                                             <span>Upload a image</span>
-                                            <input id="image" name="image" type="file" className="sr-only" />
+                                            <input id="image"
+                                                type="file"
+                                                {...register("image", { required: true })}
+                                                className="sr-only" />
                                         </label>
                                         <p className="pl-1">or drag and drop</p>
                                     </div>
@@ -171,35 +165,16 @@ export default function AddProduct() {
                                 </div>
                             </div>
                         </div>
-
-                        <div className="sm:col-span-3">
-                            <label htmlFor="genre" className="block text-sm font-medium leading-6 text-gray-900">
-                                Genre
-                            </label>
-                            <div className="mt-2">
-                                <select
-                                    id="genre"
-                                    name="genre"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-                                >
-                                    <option>Science Fiction</option>
-                                    <option>Horror</option>
-                                    <option>Romantic</option>
-                                </select>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>
-
             <div className="mt-6 flex items-center justify-end gap-x-6">
                 <button type="button" className="text-sm font-semibold leading-6 text-gray-900">
                     Cancel
                 </button>
                 <input
                     type="submit"
-                    value="Add"
+                    value="Add Book"
                     className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 />
             </div>

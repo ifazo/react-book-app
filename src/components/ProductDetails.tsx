@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom'
-import { useGetProductByIdQuery } from '../provider/api/apiSlice'
+import { useDeleteProductMutation, useGetProductByIdQuery } from '../provider/api/apiSlice'
 import { useAppSelector } from '../provider/hook'
 import { CheckIcon, MailIcon, QuestionMarkCircleIcon, StarIcon } from '@heroicons/react/solid'
 import { ShieldCheckIcon } from '@heroicons/react/outline'
@@ -13,12 +13,16 @@ function classNames(...classes: string[]) {
 export default function ProductDetails() {
 
     const { id } = useParams();
-
     const { user } = useAppSelector(state => state.user)
     console.log(user)
     const { data: product } = useGetProductByIdQuery(id as string);
     console.log(product)
-    // const [ postStatus ] = usePostStatusMutation()
+    
+    const [ deleteProduct ] = useDeleteProductMutation()
+
+    const handleDelete = () => {
+        deleteProduct(id as string)
+    }
 
     return (
         <div className="bg-white">
@@ -112,14 +116,16 @@ export default function ProductDetails() {
 
                         <form>
                             <div className="flex justify-between">
-                                <button
+                                <Link
+                                    to={`/edit/${id}`}
                                     type="button"
                                     className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                 >
                                     <MailIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
                                     Edit
-                                </button>
+                                </Link>
                                 <button
+                                    onClick={() => handleDelete()}
                                     type="button"
                                     className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                                 >
@@ -139,6 +145,7 @@ export default function ProductDetails() {
                             </div>
                             <div className="mt-10">
                                 <button
+                                    // onClick={() => handlePostStatus()}
                                     type="submit"
                                     className="w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
                                 >
