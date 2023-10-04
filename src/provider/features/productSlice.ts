@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { IProduct } from "../types/Types";
+import { IProduct } from "../../types";
 
 export interface ProductState {
   products: IProduct[];
@@ -21,4 +21,4 @@ const productSlice = createSlice({
 
 export const { addProduct } = productSlice.actions;
 
-export default productSlice.reducer;
+export default productSlice;

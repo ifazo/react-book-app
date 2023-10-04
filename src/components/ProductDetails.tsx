@@ -1,8 +1,10 @@
 import { Link, useParams } from 'react-router-dom'
 import { useDeleteProductMutation, useGetProductByIdQuery } from '../provider/api/apiSlice'
 import { useAppSelector } from '../provider/hook'
-import { CheckIcon, MailIcon, QuestionMarkCircleIcon, StarIcon } from '@heroicons/react/solid'
-import { ShieldCheckIcon } from '@heroicons/react/outline'
+import { CheckIcon, MailIcon, StarIcon } from '@heroicons/react/solid'
+import { useState } from 'react'
+import Modal from './Modal'
+import toast from 'react-hot-toast'
 
 const reviews = { average: 4, totalCount: 1624 }
 
@@ -17,16 +19,26 @@ export default function ProductDetails() {
     console.log(user)
     const { data: product } = useGetProductByIdQuery(id as string);
     console.log(product)
-    
+
     const [ deleteProduct ] = useDeleteProductMutation()
 
     const handleDelete = () => {
         deleteProduct(id as string)
+            .then((res) => {
+                if (res?.data.deletedCount > 0) {
+                    toast.success('Product deleted successfully')
+                }
+            }).catch((err) => {
+                toast.error('Failed to delete product')
+            })
     }
+
+    const [ open, setOpen ] = useState(false)
+    // const cancelButtonRef = useRef(null)
 
     return (
         <div className="bg-white">
-            <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 lg:grid lg:grid-cols-2 lg:gap-x-8">
+            <div className="max-w-2xl mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:max-w-7xl lg:px-8 lg:grid lg:grid-cols-2 lg:gap-x-8">
                 {/* Product details */}
                 <div className="lg:max-w-lg lg:self-end">
                     <nav aria-label="Breadcrumb">
@@ -103,7 +115,7 @@ export default function ProductDetails() {
                 {/* Product image */}
                 <div className="mt-10 lg:mt-0 lg:col-start-2 lg:row-span-2 lg:self-center">
                     <div className="aspect-w-1 aspect-h-1 rounded-lg overflow-hidden">
-                        <img src={product?.imgUrl} alt="cover" className="w-full h-full object-center object-cover" />
+                        <img src={product?.image} alt="cover" className="w-full h-full object-center object-cover" />
                     </div>
                 </div>
 
@@ -134,7 +146,7 @@ export default function ProductDetails() {
                                 </button>
 
                             </div>
-                            <div className="mt-4">
+                            {/* <div className="mt-4">
                                 <a href="#" className="group inline-flex text-sm text-gray-500 hover:text-gray-700">
                                     <span>{product?.date}</span>
                                     <QuestionMarkCircleIcon
@@ -142,27 +154,25 @@ export default function ProductDetails() {
                                         aria-hidden="true"
                                     />
                                 </a>
-                            </div>
+                            </div> */}
                             <div className="mt-10">
-                                <button
-                                    // onClick={() => handlePostStatus()}
-                                    type="submit"
+                                <Link
+                                    to="#"
                                     className="w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
                                 >
                                     Add to Wishlist
-                                </button>
+                                </Link>
                             </div>
-                            <div className="mt-6 text-center">
-                                <a href="#" className="group inline-flex text-base font-medium">
-                                    <ShieldCheckIcon
-                                        className="flex-shrink-0 mr-2 h-6 w-6 text-gray-400 group-hover:text-gray-500"
-                                        aria-hidden="true"
-                                    />
-                                    <span className="text-gray-500 hover:text-gray-700">Write a Review</span>
-                                </a>
-                            </div>
+                            <Link
+                                to="#"
+                                onClick={() => setOpen(true)}
+                                className="mt-6 inline-flex w-full bg-white border border-gray-300 rounded-md py-2 px-8 items-center justify-center text-sm font-medium text-gray-900 hover:bg-gray-50 sm:w-auto lg:w-full"
+                            >
+                                Write a review
+                            </Link>
                         </form>
                     </section>
+                    <Modal open={open} setOpen={setOpen} product={product} />
                 </div>
             </div>
         </div>

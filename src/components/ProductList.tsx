@@ -32,7 +32,7 @@
 
 import { Link } from "react-router-dom"
 import { useGetProductsQuery } from "../provider/api/apiSlice"
-import { IProduct } from "../provider/types/Types"
+import { IProduct } from "../types"
 
 export default function ProductList() {
 
@@ -54,22 +54,25 @@ export default function ProductList() {
                         <div key={product._id} className="group relative">
                             <div className="w-full h-56 bg-gray-200 rounded-md overflow-hidden group-hover:opacity-75 lg:h-72 xl:h-80">
                                 <img
-                                    src={product.imgUrl}
+                                    src={product.image}
                                     alt="book cover"
                                     className="w-full h-full object-center object-cover"
                                 />
                             </div>
-                            <h3 className="mt-4 text-center text-sm font-bold text-gray-900">
+                            <h3 className="mt-2 text-center text-sm font-bold text-gray-900">
                                 <Link to={`/books/${product._id}`}>
                                     <span className="absolute inset-0" />
                                     {product.title}
                                 </Link>
                             </h3>
                             <div className="flex justify-between">
-                                <p className="mt-1 text-sm text-gray-500">{product.author}</p>
-                                <p className="mt-1 text-sm text-gray-500">{product.genre}</p>
+                                <p className="mt-1 text-sm font-medium text-gray-700">{product.author}</p>
+                                <p className="mt-1 text-sm font-medium text-gray-700">${product.price}</p>
                             </div>
-                            <p className="mt-1 text-center text-sm font-medium text-gray-700">{product.date}</p>
+                            <div className="flex justify-between">
+                                <p className="mt-1 text-center text-sm font-medium text-gray-700">{product.genre}</p>
+                                <p className="mt-1 text-center text-sm font-medium text-gray-700">{product.date}</p>
+                            </div>
                         </div>
                     ))}
                 </div>

@@ -1,4 +1,3 @@
-import("tailwindcss").Config;
 import defaultTheme from "tailwindcss/defaultTheme";
 
 export default {
@@ -19,5 +18,6 @@ export default {
     "@tailwindcss/forms",
     "@tailwindcss/aspect-ratio",
     "@tailwindcss/typography",
+    "flowbite/plugin",
   ],
 };

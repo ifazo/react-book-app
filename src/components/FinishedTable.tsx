@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import { useAppSelector } from "../provider/hook";
 import { useGetProductByUserQuery } from "../provider/api/apiSlice";
 import { useState } from "react";
-import { IProduct } from "../provider/types/Types";
+import { IProduct } from "../types";
 
 export default function FinishedTable() {
 

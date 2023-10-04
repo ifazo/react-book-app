@@ -15,6 +15,7 @@ export default function Header() {
     signOut(auth)
       .then(() => {
         dispatch(setUser(null));
+        localStorage.removeItem('token');
         toast.success("User log out successfully!")
       }).catch((error) => {
         console.log(error)
@@ -79,7 +80,7 @@ export default function Header() {
               </div>
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  {user && user ? (<button
+                  { user.email ? (<button
                     type="button"
                     onClick={() => handleSignOut()}
                     className="relative inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

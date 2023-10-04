@@ -3,21 +3,19 @@ import { useAppDispatch, useAppSelector } from "../provider/hook";
 import { createUser, googleLogin } from "../provider/features/userSlice";
 import { toast } from "react-hot-toast";
 import { Link } from "react-router-dom";
-
-interface IFormInput {
-  name: string
-  email: string
-  password: string
-}
+import { useSignUpMutation } from "../provider/api/apiSlice";
+import { IAuth } from "../types";
 
 export default function SignUp() {
 
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   console.log(user);
-  const { register, handleSubmit, formState: { errors } } = useForm<IFormInput>()
+  const { register, handleSubmit, formState: { errors } } = useForm<IAuth>()
+  const [signUp] = useSignUpMutation()
 
-  const onSubmit = async (data: IFormInput) => {
+  const onSubmit = async (data: IAuth) => {
+    signUp(data)
     void dispatch(createUser({ email: data.email, password: data.password })).then(() => {
       toast.success("User created successfully!");
     }).catch((error) => {
@@ -124,13 +122,14 @@ export default function SignUp() {
                 Sign up
               </button>
             </div>
+
           </form>
 
           <div>
             <button
               onClick={handleGoogleLogin}
               type="submit"
-              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="flex w-full mt-5 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Sign up with Google
             </button>

@@ -1,25 +1,27 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
-import type { IProduct, IReview, IStatus } from "../types/Types";
+import type { IAuth, IProduct, IReview, IStatus } from "../../types";
+
+const token = localStorage.getItem("token");
 
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000/api" }),
   tagTypes: ["Book"],
   endpoints: (builder) => ({
-    // createUser: builder.mutation<IAuth, IAuth>({
-    //   query: (body) => ({
-    //     url: "/auth/user/create",
-    //     method: "POST",
-    //     body,
-    //   }),
-    // }),
-    // loginUser: builder.mutation<IAuth, IAuth>({
-    //   query: (body) => ({
-    //     url: "/auth/user/login",
-    //     method: "POST",
-    //     body,
-    //   }),
-    // }),
+    signUp: builder.mutation<IAuth, IAuth>({
+      query: (body) => ({
+        url: "/auth/sign-up",
+        method: "POST",
+        body,
+      }),
+    }),
+    signIn: builder.mutation<IAuth, IAuth>({
+      query: (body) => ({
+        url: "/auth/sign-in",
+        method: "POST",
+        body,
+      }),
+    }),
     getProducts: builder.query<IProduct[], string>({
       query: () => "/books",
     }),
@@ -29,16 +31,19 @@ export const api = createApi({
         method: "POST",
         body,
         headers: {
-          // Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       }),
       invalidatesTags: ["Book"],
     }),
-    updateProduct: builder.mutation<IProduct, IProduct>({
+    updateProduct: builder.mutation({
       query: ({ id, data }) => ({
         url: `/books/${id}`,
         method: "PATCH",
         body: data,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }),
       invalidatesTags: ["Book"],
     }),
@@ -47,6 +52,9 @@ export const api = createApi({
         url: `/books/${id}`,
         method: "DELETE",
         body: { id },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }),
       invalidatesTags: ["Book"],
     }),
@@ -62,11 +70,11 @@ export const api = createApi({
     getReview: builder.query<IReview, string>({
       query: (id) => `/reviews/${id}`,
     }),
-    postReview: builder.mutation<IReview, string>({
-      query: (body) => ({
-        url: "/book/reviews",
+    postReview: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/reviews/${id}`,
         method: "POST",
-        body,
+        body: data,
       }),
     }),
     getStatusByUser: builder.query<IProduct, string>({
@@ -83,6 +91,8 @@ export const api = createApi({
 });
 
 export const {
+  useSignUpMutation,
+  useSignInMutation,
   useGetProductsQuery,
   useGetSearchProductsQuery,
   useGetProductByIdQuery,

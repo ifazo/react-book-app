@@ -3,12 +3,8 @@ import { Link } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../provider/hook";
 import { googleLogin, loginUser } from "../provider/features/userSlice";
 import { toast } from "react-hot-toast";
-// import { useLoginUserMutation } from "../provider/api/authSlice";
-
-interface LoginFormInputs {
-  email: string
-  password: string
-}
+import { IAuth } from "../types";
+import { useSignInMutation } from "../provider/api/apiSlice";
 
 export default function SignIn() {
 
@@ -16,26 +12,36 @@ export default function SignIn() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormInputs>();
+  } = useForm<IAuth>();
 
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   console.log(user);
-  // const {data} = useLoginUserMutation()
+  const [ signIn ] = useSignInMutation()
 
-  const onSubmit = (data: LoginFormInputs) => {
-    void dispatch(loginUser({ email: data.email, password: data.password })).then(() => {
-      toast.success("Login User Successfully");
-    }).catch((error) => {
-      toast.error(error.message as string);
-    });
+  const onSubmit = (data: IAuth) => {
+    signIn(data)
+      .unwrap()
+      .then((res) => {
+        localStorage.setItem("token", res);
+        toast.success("Login User Successfully");
+      }).catch((err) => {
+        console.error(err);
+        toast.error("Login User Failed");
+      });
+    dispatch(loginUser({email: data.email, password: data.password}))
+      // .then(() => {
+      //   toast.success("Login User Successfully");
+      // }).catch(() => {
+      //   toast.error("Login User Failed");
+      // });
   };
 
   const handleGoogleLogin = () => {
-    void dispatch(googleLogin()).then(() => {
+    dispatch(googleLogin()).then(() => {
       toast.success("Login User Successfully");
-    }).catch((error) => {
-      toast.error(error.message as string);
+    }).catch((error: { message: string; }) => {
+      toast.error(error.message);
     });
   }
 
@@ -113,17 +119,17 @@ export default function SignIn() {
               </button>
             </div>
 
-            <div>
-              <button
-                type="submit"
-                onClick={handleGoogleLogin}
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Sign in with Google
-              </button>
-            </div>
-
           </form>
+
+          <div>
+            <button
+              type="submit"
+              onClick={handleGoogleLogin}
+              className="flex w-full mt-5 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Sign in with Google
+            </button>
+          </div>
 
           <p className="mt-10 text-center text-sm text-gray-500">
             Not have an account?{' '}

@@ -4,7 +4,7 @@ import { useGetStatusByUserQuery } from "../provider/api/apiSlice";
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import { IStatus } from "../provider/types/Types";
+import { IStatus } from "../types";
 
 export default function ReadingTable() {
 

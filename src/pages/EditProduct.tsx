@@ -1,15 +1,14 @@
-import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { useGetProductByIdQuery, useUpdateProductMutation } from "../provider/api/apiSlice";
 import { useParams } from "react-router-dom";
 import { useAppSelector } from "../provider/hook";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { IProduct } from "../provider/types/Types";
+import { IProduct } from "../types";
 
 
 export default function EditProduct() {
 
-    const { id } = useParams();
+    const { id } = useParams() as { id: string };
     console.log(id)
     const { user } = useAppSelector((state) => state.user)
     console.log(user)
@@ -17,9 +16,9 @@ export default function EditProduct() {
     console.log(product)
     const [ updateProduct ] = useUpdateProductMutation()
 
-    const { register, handleSubmit, formState: { errors } } = useForm<IProduct>()
+    const { register, handleSubmit } = useForm<IProduct>()
 
-    const onSubmit: SubmitHandler<IProduct> = (data) => {
+    const onSubmit: SubmitHandler<IProduct> = (data: IProduct) => {
         console.log(data)
         const imgToken = import.meta.env.VITE_IMGBB_TOKEN
         const imgHostUrl = `https://api.imgbb.com/1/upload?key=${imgToken}`
@@ -31,13 +30,14 @@ export default function EditProduct() {
             .then(res => {
                 const imgUrl = res.data?.display_url;
                 data.image = imgUrl
-                updateProduct({ id: id!, data: data })
+                updateProduct({ id: id, data: data })
                     .unwrap()
-                    .then(() => {
+                    .then((res) => {
+                        console.log(res)
                         toast.success("Book edited successfully")
                     })
                     .catch((err) => {
-                        console.log(err)
+                        console.error(err);
                         toast.error("Failed to edit Book")
                     })
             })
@@ -50,7 +50,7 @@ export default function EditProduct() {
     return (
         <form className="p-10" onSubmit={handleSubmit(onSubmit)}>
             <div className="space-y-12">
-                <h2 className="text-center font-bold text-gray-900">Edit Book Info</h2>
+                <h2 className="text-2xl text-center font-bold text-gray-900">Edit Book Info</h2>
                 <div className="border-y border-gray-900/10 pb-12">
                     <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                         <div className="col-span-full">
@@ -61,9 +61,9 @@ export default function EditProduct() {
                                 <input
                                     id="title"
                                     defaultValue={product?.title}
-                                    {...register("title", { required: true })}
+                                    {...register("title")}
                                     type="text"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    className="block w-full rounded-md border-0 px-2 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
@@ -71,13 +71,13 @@ export default function EditProduct() {
                             <label htmlFor="price" className="block text-sm font-medium leading-6 text-gray-900">
                                 Price
                             </label>
-                            {errors.price && <span>Price field is required</span>}
                             <div className="mt-2">
                                 <input
                                     id="price"
+                                    defaultValue={product?.price}
                                     {...register("price", { required: true })}
                                     type="text"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    className="block w-full rounded-md border-0 px-2 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
@@ -90,11 +90,12 @@ export default function EditProduct() {
                                     id="genre"
                                     defaultValue={product?.genre}
                                     {...register("genre", { required: true })}
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                                    className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm sm:leading-6"
                                 >
-                                    <option>Science Fiction</option>
-                                    <option>Horror</option>
-                                    <option>Romantic</option>
+                                    <option>Science</option>
+                                    <option>Commerce</option>
+                                    <option>Arts</option>
+                                    <option>Others</option>
                                 </select>
                             </div>
                         </div>
@@ -108,7 +109,7 @@ export default function EditProduct() {
                                     type="text"
                                     defaultValue={product?.author}
                                     {...register("author", { required: true })}
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    className="block w-full rounded-md border-0 px-2 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
@@ -119,10 +120,10 @@ export default function EditProduct() {
                             <div className="mt-2">
                                 <input
                                     id="date"
-                                    type="text"
+                                    type="date"
                                     defaultValue={product?.date}
                                     {...register("date", { required: true })}
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    className="block w-full rounded-md border-0 px-2 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
@@ -136,7 +137,7 @@ export default function EditProduct() {
                                     rows={3}
                                     defaultValue={product?.description}
                                     {...register("description", { required: true })}
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    className="block w-full rounded-md border-0 px-2 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
@@ -160,7 +161,7 @@ export default function EditProduct() {
                                             <input
                                                 id="image"
                                                 type="file"
-                                                {...register("image", { required: true })}
+                                                {...register("image")}
                                                 className="sr-only" />
                                         </label>
                                         <p className="pl-1">or drag and drop</p>

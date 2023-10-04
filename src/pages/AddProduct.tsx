@@ -2,7 +2,7 @@ import { useAppSelector } from '../provider/hook';
 import { toast } from "react-hot-toast";
 import { usePostProductMutation } from "../provider/api/apiSlice";
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { IProduct } from '../provider/types/Types';
+import { IProduct } from '../types';
 
 
 export default function AddProduct() {
@@ -41,7 +41,7 @@ export default function AddProduct() {
     return (
         <form className="p-10" onSubmit={handleSubmit(onSubmit)}>
             <div className="space-y-12">
-                <h2 className="text-center font-bold text-gray-900">Add Book Info</h2>
+                <h2 className="text-center font-bold text-2xl text-gray-900">Add Book Info</h2>
                 <div className="border-y border-gray-900/10 pb-12">
                     <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                         <div className="col-span-full">
@@ -54,7 +54,7 @@ export default function AddProduct() {
                                     id="title"
                                     {...register("title", { required: true })}
                                     type="text"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    className="block w-full rounded-md border-0 px-2 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
@@ -68,7 +68,7 @@ export default function AddProduct() {
                                     id="price"
                                     {...register("price", { required: true })}
                                     type="text"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    className="block w-full rounded-md border-0 px-2 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
@@ -81,7 +81,7 @@ export default function AddProduct() {
                                 <select
                                     id="genre"
                                     {...register("genre", { required: true })}
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                                    className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm sm:leading-6"
                                 >
                                     <option>Science Fiction</option>
                                     <option>Horror</option>
@@ -99,7 +99,7 @@ export default function AddProduct() {
                                     id="author"
                                     {...register("author", { required: true })}
                                     type="text"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    className="block w-full rounded-md border-0 px-2 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
@@ -113,8 +113,8 @@ export default function AddProduct() {
                                 <input
                                     id="date"
                                     {...register("date", { required: true })}
-                                    type="text"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    type='date'
+                                    className="block w-full rounded-md border-0 px-2 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
@@ -130,11 +130,10 @@ export default function AddProduct() {
                                     {...register("description", { required: true })}
                                     placeholder="Write a few sentences about the product."
                                     rows={3}
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    className="block w-full rounded-md border-0 px-2 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
-
                         <div className="col-span-full">
                             <label htmlFor="image" className="block text-sm font-medium leading-6 text-gray-900">
                                 Photo

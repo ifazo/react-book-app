@@ -1,40 +1,36 @@
 export interface IAuth {
-  _id: string;
-  name: string;
+  name?: string;
   email: string;
   password: string;
-  role: string;
-  date: string;
 }
 
 export interface IProduct {
+  _id: string;
   id: string;
-  username: string;
+  user: string;
   email: string;
   title: string;
   price: number;
-  description: string;
-  author: string;
   genre: string;
-  date: string;
-  file: string;
+  author: string;
+  date: Date;
+  description: string;
   image: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface IReview {
-  _id: string;
   bookId: string;
-  name: string;
   email: string;
   rating: string;
   title: string;
   details: string;
-  date: string;
+  createdAt: string;
 }
 
 export interface IStatus {
-  productId: string;
-  userId: string;
+  bookId: string;
   email: string;
   status: string;
   title: string;
