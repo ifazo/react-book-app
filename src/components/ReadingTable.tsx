@@ -13,9 +13,9 @@ export default function ReadingTable() {
     const { user } = useAppSelector((state) => state.user);
     const email = user.email
 
-    const { data: statuses } = useGetStatusByUserQuery(email as string)
+    const { data } = useGetStatusByUserQuery(email as string)
 
-    const handleAddToFinished = (id) => {
+    const handleAddToFinished = (id: string) => {
         const statusItem = {
             status: 'finished'
         };
@@ -81,7 +81,7 @@ export default function ReadingTable() {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200 bg-white">
-                                    {statuses?.map((status: IStatus) => (
+                                    {Array.isArray(data) && data?.map((status: IStatus) => (
                                         <tr key={status?._id}>
                                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
                                                 {status?.title}

@@ -24,11 +24,12 @@ export default function ProductDetails() {
 
     const handleDelete = () => {
         deleteProduct(id as string)
+            .unwrap()
             .then((res) => {
-                if (res?.data.deletedCount > 0) {
+                if (res?.deletedCount > 0) {
                     toast.success('Product deleted successfully')
                 }
-            }).catch((err) => {
+            }).catch(() => {
                 toast.error('Failed to delete product')
             })
     }

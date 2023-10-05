@@ -11,7 +11,7 @@ export default function FinishedTable() {
     const { user } = useAppSelector((state) => state.user);
     const email = user.email
 
-    const { data: products } = useGetProductByUserQuery(email as string)
+    const { data } = useGetProductByUserQuery(email as string)
 
     return (
         <div className="px-4 sm:px-6 lg:px-8">
@@ -19,7 +19,7 @@ export default function FinishedTable() {
                 <div className="sm:flex-auto">
                     <h1 className="text-xl font-semibold text-gray-900">Finished Books</h1>
                     <p className="mt-2 text-sm text-gray-700">
-                        A list of all the books added by {user.name}
+                        A list of all the books added by {user.email}
                     </p>
                 </div>
                 <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
@@ -62,7 +62,7 @@ export default function FinishedTable() {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200 bg-white">
-                                    {products?.map((product: IProduct) => (
+                                    {Array.isArray(data) && data.map((product: IProduct) => (
                                         <tr key={product._id}>
                                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
                                                 {product.title}

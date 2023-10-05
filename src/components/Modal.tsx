@@ -14,7 +14,7 @@ export default function Modal({ open, setOpen, product }) {
     const { id } = useParams();
     const cancelButtonRef = useRef(null)
     const { user } = useAppSelector(state => state.user)
-    const [ postReview, { isLoading, isError } ] = usePostReviewMutation()
+    const [ postReview ] = usePostReviewMutation()
     const { register, handleSubmit, formState: { errors } } = useForm<IReview>()
     const onSubmit: SubmitHandler<IReview> = (data: IReview) => {
         console.log(data)

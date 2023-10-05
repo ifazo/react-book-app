@@ -20,21 +20,21 @@ export default function SignIn() {
   const [ signIn ] = useSignInMutation()
 
   const onSubmit = (data: IAuth) => {
+    dispatch(loginUser({ email: data.email, password: data.password }))
     signIn(data)
       .unwrap()
       .then((res) => {
-        localStorage.setItem("token", res);
+        localStorage.setItem("token", JSON.stringify(res));
         toast.success("Login User Successfully");
       }).catch((err) => {
         console.error(err);
         toast.error("Login User Failed");
       });
-    dispatch(loginUser({email: data.email, password: data.password}))
-      // .then(() => {
-      //   toast.success("Login User Successfully");
-      // }).catch(() => {
-      //   toast.error("Login User Failed");
-      // });
+    // .then(() => {
+    //   toast.success("Login User Successfully");
+    // }).catch(() => {
+    //   toast.error("Login User Failed");
+    // });
   };
 
   const handleGoogleLogin = () => {

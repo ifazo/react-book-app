@@ -30,6 +30,7 @@ export interface IReview {
 }
 
 export interface IStatus {
+  _id: string;
   bookId: string;
   email: string;
   status: string;

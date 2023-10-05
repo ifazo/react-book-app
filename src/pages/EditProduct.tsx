@@ -121,7 +121,7 @@ export default function EditProduct() {
                                 <input
                                     id="date"
                                     type="date"
-                                    defaultValue={product?.date}
+                                    defaultValue={product?.date.toString()}
                                     {...register("date", { required: true })}
                                     className="block w-full rounded-md border-0 px-2 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                                 />

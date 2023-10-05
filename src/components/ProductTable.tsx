@@ -1,21 +1,21 @@
 import { Link } from "react-router-dom"
 import { useAppSelector } from "../provider/hook";
-import { useGetProductByUserQuery } from "../provider/api/apiSlice";
+import { useDeleteProductMutation, useGetProductByUserQuery } from "../provider/api/apiSlice";
 import { IProduct } from "../types";
-import axios from "axios";
 import { toast } from "react-hot-toast";
 
 export default function ProductTable() {
 
     const { user } = useAppSelector((state) => state.user);
     const email = user.email
-    const { data: products } = useGetProductByUserQuery(email as string)
-
+    const { data } = useGetProductByUserQuery(email as string)
+    // console.log(data)
+    const [ deleteProduct ] = useDeleteProductMutation()
     // const [ open, setOpen ] = useState(false)
     // const cancelButtonRef = useRef(null)
 
     const handleDelete = (id: string) => {
-        axios.delete(`http://localhost:5000/api/books/${id}`)
+        deleteProduct(id)
             .then(() => {
                 toast.success("Book deleted successfully")
                 window.location.reload()
@@ -31,7 +31,7 @@ export default function ProductTable() {
                 <div className="sm:flex-auto">
                     <h1 className="text-xl font-semibold text-gray-900">Books</h1>
                     <p className="mt-2 text-sm text-gray-700">
-                        A list of all the books added by {user.name}
+                        A list of all the books added by {user.email}
                     </p>
                 </div>
                 <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
@@ -74,7 +74,7 @@ export default function ProductTable() {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200 bg-white">
-                                    {products?.map((product: IProduct) => (
+                                    {Array.isArray(data) && data.map((product: IProduct) => (
                                         <tr key={product._id}>
                                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
                                                 {product.title}
