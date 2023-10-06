@@ -32,15 +32,8 @@ export default function EditProduct() {
                 const imgUrl = res.data?.display_url;
                 data.image = imgUrl
                 updateProduct({ id: id, data: data })
-                    .unwrap()
-                    .then((res) => {
-                        console.log(res)
-                        toast.success("Book edited successfully")
-                    })
-                    .catch((err) => {
-                        console.error(err);
-                        toast.error("Failed to edit Book")
-                    })
+                    .then(() => toast.success('Product edited successfully'))
+                    .catch(() => toast.error('Unauthorize user request'))
             })
     }
 

@@ -16,26 +16,19 @@ export default function AddProduct() {
     const onSubmit: SubmitHandler<IProduct> = (data) => {
         const imgToken = import.meta.env.VITE_IMGBB_TOKEN
         const formData = new FormData();
-        formData.append('image', data.image[0]);
+        formData.append('image', data.image[ 0 ]);
         fetch(`https://api.imgbb.com/1/upload?key=${imgToken}`, {
             method: 'POST',
             body: formData
         })
             .then(res => res.json())
             .then(res => {
-                console.log(res)
                 const imgUrl = res.data?.display_url;
                 data.image = imgUrl;
                 postProduct(data)
             })
-            .then(res => {
-                console.log(res)
-                toast.success('Product added successfully')
-            })
-            .catch(err => {
-                console.log(err)
-                toast.error('Something went wrong')
-            })
+            .then(() => toast.success('Product added successfully'))
+            .catch(() => toast.error('Unauthorize user request'))
     };
 
     return (

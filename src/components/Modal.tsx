@@ -9,7 +9,7 @@ import toast from 'react-hot-toast'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
 
-export default function Modal({ open, setOpen, product }) {
+export default function Modal({ open, setOpen }: { open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
 
     const { id } = useParams();
     const cancelButtonRef = useRef(null)
@@ -18,12 +18,9 @@ export default function Modal({ open, setOpen, product }) {
     const { register, handleSubmit, formState: { errors } } = useForm<IReview>()
     const onSubmit: SubmitHandler<IReview> = (data: IReview) => {
         console.log(data)
-        const body = { ...data, productId: product._id, email: user }
-        postReview({ id, body })
-            .then(res => {
-                console.log(res)
-                toast.success('Review added successfully')
-            })
+        if (!user) return toast.error('Please login first')
+        postReview({id, data})
+            .then(() => toast.success('Review added successfully'))
             .catch(err => {
                 console.log(err)
                 toast.error('Something went wrong')

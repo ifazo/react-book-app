@@ -1,11 +1,11 @@
 import { Link, useParams } from 'react-router-dom'
 import { useDeleteProductMutation, useGetProductByIdQuery } from '../provider/api/apiSlice'
-import { useAppSelector } from '../provider/hook'
 import { StarIcon } from '@heroicons/react/solid'
 import { useState } from 'react'
 import Modal from './Modal'
 import toast from 'react-hot-toast'
 import { CalendarIcon, PencilAltIcon, TrashIcon, UserIcon } from '@heroicons/react/outline'
+import jwt_decode from "jwt-decode";
 
 const reviews = { average: 4, totalCount: 1624 }
 
@@ -16,11 +16,8 @@ function classNames(...classes: string[]) {
 export default function ProductDetails() {
 
     const { id } = useParams();
-    const { user } = useAppSelector(state => state.user)
-    console.log(user)
     const { data: product } = useGetProductByIdQuery(id as string);
-    console.log(product)
-
+    
     const [ deleteProduct ] = useDeleteProductMutation()
 
     const handleDelete = () => {
@@ -35,6 +32,9 @@ export default function ProductDetails() {
 
     const [ open, setOpen ] = useState(false)
     // const cancelButtonRef = useRef(null)
+    const token = localStorage.getItem('token') as string;
+    const decodedToken = jwt_decode(token)
+    console.log(decodedToken)
 
     return (
         <div className="bg-white">
@@ -178,7 +178,7 @@ export default function ProductDetails() {
                             </Link>
                         </form>
                     </section>
-                    <Modal open={open} setOpen={setOpen} product={product} />
+                    <Modal open={open} setOpen={setOpen} />
                 </div>
             </div>
         </div>

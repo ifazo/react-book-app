@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import { useAppSelector } from "../provider/hook";
-import { useGetProductByUserQuery } from "../provider/api/apiSlice";
+import { useGetProductsByUserQuery } from "../provider/api/apiSlice";
 import { useState } from "react";
 import { IProduct } from "../types";
 
@@ -11,7 +11,7 @@ export default function FinishedTable() {
     const { user } = useAppSelector((state) => state.user);
     const email = user.email
 
-    const { data } = useGetProductByUserQuery(email as string)
+    const { data } = useGetProductsByUserQuery(email as string)
 
     return (
         <div className="px-4 sm:px-6 lg:px-8">

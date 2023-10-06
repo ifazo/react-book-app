@@ -13,7 +13,7 @@ export interface IProduct {
   price: number;
   genre: string;
   author: string;
-  date: Date;
+  date: string;
   description: string;
   image: string;
   createdAt: string;
@@ -21,12 +21,13 @@ export interface IProduct {
 }
 
 export interface IReview {
+  _id: string;
   bookId: string;
+  name: string;
   email: string;
-  rating: string;
+  rating: number;
   title: string;
   details: string;
-  createdAt: string;
 }
 
 export interface IStatus {

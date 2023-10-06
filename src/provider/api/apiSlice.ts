@@ -2,7 +2,6 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
 import type { IAuth, IProduct, IReview, IStatus } from "../../types";
 
 const token = localStorage.getItem("token");
-console.log(token)
 
 export const api = createApi({
   reducerPath: "api",
@@ -24,7 +23,13 @@ export const api = createApi({
       }),
     }),
     getProducts: builder.query<IProduct[], string>({
-      query: () => "/books",
+      query: (data) => `/books?search=${data}`,
+    }),
+    getProductById: builder.query<IProduct, string>({
+      query: (id) => `/books/${id}`,
+    }),
+    getProductsByUser: builder.query<IProduct[], string>({
+      query: (email) => `/books/user/${email}`,
     }),
     postProduct: builder.mutation<IProduct, IProduct>({
       query: (body) => ({
@@ -59,16 +64,7 @@ export const api = createApi({
       }),
       invalidatesTags: ["Book"],
     }),
-    getSearchProducts: builder.query<IProduct, string>({
-      query: (data) => `/books/search?q=${data}`,
-    }),
-    getProductByUser: builder.query<IProduct, string>({
-      query: (email) => `/books/user/${email}`,
-    }),
-    getProductById: builder.query<IProduct, string>({
-      query: (id) => `/books/${id}`,
-    }),
-    getReview: builder.query<IReview, string>({
+    getReviews: builder.query<IReview, string>({
       query: (id) => `/reviews/${id}`,
     }),
     postReview: builder.mutation({
@@ -76,6 +72,9 @@ export const api = createApi({
         url: `/reviews/${id}`,
         method: "POST",
         body: data,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }),
     }),
     getStatusByUser: builder.query<IProduct, string>({
@@ -95,10 +94,9 @@ export const {
   useSignUpMutation,
   useSignInMutation,
   useGetProductsQuery,
-  useGetSearchProductsQuery,
   useGetProductByIdQuery,
-  useGetProductByUserQuery,
-  useGetReviewQuery,
+  useGetProductsByUserQuery,
+  useGetReviewsQuery,
   useGetStatusByUserQuery,
   usePostStatusMutation,
   usePostReviewMutation,

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import { useAppSelector } from "../provider/hook";
-import { useDeleteProductMutation, useGetProductByUserQuery } from "../provider/api/apiSlice";
+import { useDeleteProductMutation, useGetProductsByUserQuery } from "../provider/api/apiSlice";
 import { IProduct } from "../types";
 import { toast } from "react-hot-toast";
 
@@ -8,7 +8,7 @@ export default function ProductTable() {
 
     const { user } = useAppSelector((state) => state.user);
     const email = user.email
-    const { data } = useGetProductByUserQuery(email as string)
+    const { data } = useGetProductsByUserQuery(email as string)
     // console.log(data)
     const [ deleteProduct ] = useDeleteProductMutation()
     // const [ open, setOpen ] = useState(false)

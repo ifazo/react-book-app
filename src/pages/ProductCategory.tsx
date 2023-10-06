@@ -1,5 +1,4 @@
 import ProductFilters from "../components/ProductFilters";
-import ProductList from "../components/ProductList";
 import { useAppSelector } from "../provider/hook";
 
 export default function ProductCategory() {
@@ -11,7 +10,6 @@ export default function ProductCategory() {
     return (
         <div>
             <ProductFilters />
-            <ProductList />
         </div>
     )
 }
