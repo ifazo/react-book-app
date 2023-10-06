@@ -1,10 +1,11 @@
 import { Link, useParams } from 'react-router-dom'
 import { useDeleteProductMutation, useGetProductByIdQuery } from '../provider/api/apiSlice'
 import { useAppSelector } from '../provider/hook'
-import { CheckIcon, MailIcon, StarIcon } from '@heroicons/react/solid'
+import { StarIcon } from '@heroicons/react/solid'
 import { useState } from 'react'
 import Modal from './Modal'
 import toast from 'react-hot-toast'
+import { CalendarIcon, PencilAltIcon, TrashIcon, UserIcon } from '@heroicons/react/outline'
 
 const reviews = { average: 4, totalCount: 1624 }
 
@@ -25,10 +26,8 @@ export default function ProductDetails() {
     const handleDelete = () => {
         deleteProduct(id as string)
             .unwrap()
-            .then((res) => {
-                if (res?.deletedCount > 0) {
-                    toast.success('Product deleted successfully')
-                }
+            .then(() => {
+                toast.success('Product deleted successfully')
             }).catch(() => {
                 toast.error('Failed to delete product')
             })
@@ -68,7 +67,7 @@ export default function ProductDetails() {
                     </nav>
 
                     <div className="mt-4">
-                        <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">{product?.title}</h1>
+                        <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">{product?.title}</h1>
                     </div>
 
                     <section aria-labelledby="information-heading" className="mt-4">
@@ -77,7 +76,7 @@ export default function ProductDetails() {
                         </h2>
 
                         <div className="flex items-center">
-                            <p className="text-lg text-gray-900 sm:text-xl">${product?.price}</p>
+                            <p className="text-lg font-semibold text-gray-900 sm:text-xl">${product?.price}</p>
 
                             <div className="ml-4 pl-4 border-l border-gray-300">
                                 <h2 className="sr-only">Reviews</h2>
@@ -102,13 +101,19 @@ export default function ProductDetails() {
                             </div>
                         </div>
 
-                        <div className="mt-4 space-y-6">
-                            <p className="text-base text-gray-500">{product?.description}</p>
+                        <div className="flex justify-between">
+                            <div className="mt-6 flex items-center">
+                                <UserIcon className="flex-shrink-0 w-5 h-5" aria-hidden="true" />
+                                <p className="ml-2 font-medium text-base text-gray-700">{product?.author}</p>
+                            </div>
+                            <div className="mt-6 flex items-center">
+                                <CalendarIcon className="flex-shrink-0 w-5 h-5" aria-hidden="true" />
+                                <p className="ml-2 font-medium text-base text-gray-700">{product?.date.toString()}</p>
+                            </div>
                         </div>
 
-                        <div className="mt-6 flex items-center">
-                            <CheckIcon className="flex-shrink-0 w-5 h-5 text-green-500" aria-hidden="true" />
-                            <p className="ml-2 text-sm text-gray-500">{product?.author}</p>
+                        <div className="mt-4 space-y-6">
+                            <p className="text-base text-gray-500">{product?.description}</p>
                         </div>
                     </section>
                 </div>
@@ -134,7 +139,7 @@ export default function ProductDetails() {
                                     type="button"
                                     className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                 >
-                                    <MailIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+                                    <PencilAltIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
                                     Edit
                                 </Link>
                                 <button
@@ -142,7 +147,7 @@ export default function ProductDetails() {
                                     type="button"
                                     className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                                 >
-                                    <MailIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+                                    <TrashIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
                                     Delete
                                 </button>
 

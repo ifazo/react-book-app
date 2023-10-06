@@ -9,21 +9,21 @@ export default function AddProduct() {
 
     const { user } = useAppSelector((state) => state.user);
     console.log(user)
-    const [ postProduct, { isError, isLoading, isSuccess } ] = usePostProductMutation();
-    console.log(isError, isLoading, isSuccess)
+    const [ postProduct ] = usePostProductMutation();
 
     const { register, handleSubmit, formState: { errors } } = useForm<IProduct>()
 
     const onSubmit: SubmitHandler<IProduct> = (data) => {
-        console.log(data)
         const imgToken = import.meta.env.VITE_IMGBB_TOKEN
-        const imgHostUrl = `https://api.imgbb.com/1/upload?key=${imgToken}`
-        fetch(imgHostUrl, {
+        const formData = new FormData();
+        formData.append('image', data.image[0]);
+        fetch(`https://api.imgbb.com/1/upload?key=${imgToken}`, {
             method: 'POST',
-            body: data.image
+            body: formData
         })
             .then(res => res.json())
             .then(res => {
+                console.log(res)
                 const imgUrl = res.data?.display_url;
                 data.image = imgUrl;
                 postProduct(data)
@@ -83,9 +83,11 @@ export default function AddProduct() {
                                     {...register("genre", { required: true })}
                                     className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm sm:leading-6"
                                 >
-                                    <option>Science Fiction</option>
-                                    <option>Horror</option>
-                                    <option>Romantic</option>
+                                    <option>Anime</option>
+                                    <option>Science</option>
+                                    <option>Business</option>
+                                    <option>Arts</option>
+                                    <option>History</option>
                                 </select>
                             </div>
                         </div>

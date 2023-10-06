@@ -12,23 +12,28 @@ export default function SignUp() {
   const { user } = useAppSelector((state) => state.user);
   console.log(user);
   const { register, handleSubmit, formState: { errors } } = useForm<IAuth>()
-  const [signUp] = useSignUpMutation()
+  const [ signUp ] = useSignUpMutation()
 
   const onSubmit = async (data: IAuth) => {
+    dispatch(createUser({ email: data.email, password: data.password }))
     signUp(data)
-    void dispatch(createUser({ email: data.email, password: data.password })).then(() => {
-      toast.success("User created successfully!");
-    }).catch((error) => {
-      toast.error(error as string);
-    })
+      .unwrap()
+      .then((res) => {
+        console.log(res)
+        localStorage.setItem("token", res);
+        toast.success("User created successfully!");
+      }).catch((error) => {
+        toast.error(error.message);
+      })
   };
 
   const handleGoogleLogin = () => {
-    void dispatch(googleLogin()).then(() => {
-      toast.success("User created Successfully");
-    }).catch((error) => {
-      toast.error(error as string);
-    });
+    void dispatch(googleLogin())
+      .then(() => {
+        toast.success("Login user Successfully");
+      }).catch((error) => {
+        console.log(error.message);
+      });
   }
 
   return (

@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
 import type { IAuth, IProduct, IReview, IStatus } from "../../types";
 
 const token = localStorage.getItem("token");
+console.log(token)
 
 export const api = createApi({
   reducerPath: "api",

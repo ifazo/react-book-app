@@ -19,15 +19,16 @@ export default function EditProduct() {
     const { register, handleSubmit } = useForm<IProduct>()
 
     const onSubmit: SubmitHandler<IProduct> = (data: IProduct) => {
-        console.log(data)
         const imgToken = import.meta.env.VITE_IMGBB_TOKEN
-        const imgHostUrl = `https://api.imgbb.com/1/upload?key=${imgToken}`
-        fetch(imgHostUrl, {
+        const formData = new FormData();
+        formData.append('image', data.image[ 0 ]);
+        fetch(`https://api.imgbb.com/1/upload?key=${imgToken}`, {
             method: 'POST',
-            body: data.image
+            body: formData
         })
             .then(res => res.json())
             .then(res => {
+                console.log(res)
                 const imgUrl = res.data?.display_url;
                 data.image = imgUrl
                 updateProduct({ id: id, data: data })
@@ -121,7 +122,7 @@ export default function EditProduct() {
                                 <input
                                     id="date"
                                     type="date"
-                                    defaultValue={product?.date.toString()}
+                                    defaultValue={product?.date}
                                     {...register("date", { required: true })}
                                     className="block w-full rounded-md border-0 px-2 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                                 />
