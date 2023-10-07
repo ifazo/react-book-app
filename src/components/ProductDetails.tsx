@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom'
-import { useDeleteProductMutation, useGetProductByIdQuery } from '../provider/api/apiSlice'
+import { useDeleteProductMutation, useGetProductByIdQuery, usePostStatusMutation } from '../provider/api/apiSlice'
 import { StarIcon } from '@heroicons/react/solid'
 import { useState } from 'react'
 import Modal from './Modal'
@@ -17,8 +17,26 @@ export default function ProductDetails() {
 
     const { id } = useParams();
     const { data: product } = useGetProductByIdQuery(id as string);
-    
+
+    const [ postStatus ] = usePostStatusMutation()
     const [ deleteProduct ] = useDeleteProductMutation()
+
+    const handleStatus = () => {
+        postStatus({ id: id, body: { status: 'wishlist' } })
+            .unwrap()
+            .then((res) => {
+                console.log(res)
+                if (res.error) {
+                    toast.error(res.message)
+                }
+                else {
+                    toast.success('Product added to wishlist successfully')
+                }
+            }).catch((err) => {
+                console.log(err)
+                toast.error('Failed to add product to wishlist')
+            })
+    }
 
     const handleDelete = () => {
         deleteProduct(id as string)
@@ -161,21 +179,22 @@ export default function ProductDetails() {
                                     />
                                 </a>
                             </div> */}
-                            <div className="mt-10">
-                                <Link
-                                    to="#"
+                            <div className="mt-5">
+                                <button
+                                    type="button"
+                                    onClick={() => handleStatus()}
                                     className="w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
                                 >
                                     Add to Wishlist
-                                </Link>
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setOpen(true)}
+                                    className="mt-6 inline-flex w-full bg-white border border-gray-300 rounded-md py-2 px-8 items-center justify-center text-sm font-medium text-gray-900 hover:bg-gray-50 sm:w-auto lg:w-full"
+                                >
+                                    Write a review
+                                </button>
                             </div>
-                            <Link
-                                to="#"
-                                onClick={() => setOpen(true)}
-                                className="mt-6 inline-flex w-full bg-white border border-gray-300 rounded-md py-2 px-8 items-center justify-center text-sm font-medium text-gray-900 hover:bg-gray-50 sm:w-auto lg:w-full"
-                            >
-                                Write a review
-                            </Link>
                         </form>
                     </section>
                     <Modal open={open} setOpen={setOpen} />

@@ -7,9 +7,9 @@ import { toast } from "react-hot-toast";
 export default function ProductTable() {
 
     const { user } = useAppSelector((state) => state.user);
-    const email = user.email
-    const { data } = useGetProductsByUserQuery(email as string)
-    // console.log(data)
+    const email = user?.email as string;
+    const { data } = useGetProductsByUserQuery(email)
+    console.log(data)
     const [ deleteProduct ] = useDeleteProductMutation()
     // const [ open, setOpen ] = useState(false)
     // const cancelButtonRef = useRef(null)

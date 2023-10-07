@@ -1,12 +1,12 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
-import type { IAuth, IProduct, IReview, IStatus } from "../../types";
+import type { IAuth, IProduct, IReview } from "../../types";
 
 const token = localStorage.getItem("token");
 
 export const api = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000/api" }),
-  tagTypes: ["Book"],
+  baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_BASEURL }),
+  tagTypes: ["Book", "review", "status"],
   endpoints: (builder) => ({
     signUp: builder.mutation<IAuth, IAuth>({
       query: (body) => ({
@@ -76,16 +76,21 @@ export const api = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
+      invalidatesTags: ["review"],
     }),
     getStatusByUser: builder.query<IProduct, string>({
       query: (email) => `/book/status/${email}`,
     }),
-    postStatus: builder.mutation<IStatus, IStatus>({
-      query: (body) => ({
-        url: "/status",
+    postStatus: builder.mutation({
+      query: ({id, body}) => ({
+      url: `/status/${id}`,
         method: "POST",
         body,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }),
+      invalidatesTags: ["status"],
     }),
   }),
 });

@@ -1,7 +1,6 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { Fragment, useRef } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import { StarIcon } from '@heroicons/react/outline'
 import { IReview } from '../types'
 import { useAppSelector } from '../provider/hook'
 import { usePostReviewMutation } from '../provider/api/apiSlice'
@@ -13,13 +12,15 @@ export default function Modal({ open, setOpen }: { open: boolean, setOpen: React
 
     const { id } = useParams();
     const cancelButtonRef = useRef(null)
+
     const { user } = useAppSelector(state => state.user)
     const [ postReview ] = usePostReviewMutation()
+
     const { register, handleSubmit, formState: { errors } } = useForm<IReview>()
     const onSubmit: SubmitHandler<IReview> = (data: IReview) => {
         console.log(data)
         if (!user) return toast.error('Please login first')
-        postReview({id, data})
+        postReview({ id, data })
             .then(() => toast.success('Review added successfully'))
             .catch(err => {
                 console.log(err)
@@ -44,95 +45,67 @@ export default function Modal({ open, setOpen }: { open: boolean, setOpen: React
                     </Transition.Child>
 
                     {/* This element is to trick the browser into centering the modal contents. */}
-                    <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">
-                        &#8203;
-                    </span>
-                    <Transition.Child
-                        as={Fragment}
-                        enter="ease-out duration-300"
-                        enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                        enterTo="opacity-100 translate-y-0 sm:scale-100"
-                        leave="ease-in duration-200"
-                        leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-                        leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                    >
-                        <div className="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
-                            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100">
-                                <StarIcon className="h-6 w-6 text-yellow-600" aria-hidden="true" />
-                            </div>
-                            <div className="mt-3 text-center sm:mt-5">
-                                <Dialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
-                                    Review
-                                </Dialog.Title>
-                                <div className="mt-2">
-                                    {/* Rating input box start */}
-                                    <div>
-                                        <label htmlFor="rating" className="block text-sm font-medium text-gray-700">
-                                            Rating
-                                        </label>
-                                        {errors.rating && <span>Rating field is required</span>}
-                                        <select
-                                            id="rating"
-                                            {...register('rating', { required: true })}
-                                            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-                                            defaultValue="5"
-                                        >
-                                            <option value="5">5 Star</option>
-                                            <option value="4">4 Star</option>
-                                            <option value="3">3 Star</option>
-                                            <option value="2">2 Star</option>
-                                            <option value="1">1 Star</option>
-                                        </select>
-                                    </div>
-                                    {/* Rating input box end */}
-                                    <div>
-                                        <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-                                            Title
-                                        </label>
-                                        {errors.title && <span>Title field is required</span>}
-                                        <div className="mt-1">
-                                            <input
-                                                id="title"
-                                                {...register('title', { required: true })}
-                                                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                                                placeholder="your title..."
-                                            />
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label htmlFor="details" className="block text-sm font-medium text-gray-700">
-                                            Details
-                                        </label>
-                                        {errors.details && <span>Details field is required</span>}
-                                        <div className="mt-1">
-                                            <textarea
-                                                id="details"
-                                                {...register('details', { required: true })}
-                                                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                                                placeholder="your comment..."
-                                            />
-                                        </div>
-                                    </div>
-                                    {/* Review input field end */}
-                                </div>
-                            </div>
-                            <div className="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
+                    <div className="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+                        <span className="hidden sm:inline-block sm:h-screen sm:align-middle" aria-hidden="true">&#8203;</span>
+
+                        <div className="relative inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl dark:bg-gray-900 sm:my-8 sm:w-full sm:max-w-sm sm:p-6 sm:align-middle">
+                            <h3 className="text-lg font-medium leading-6 text-gray-800 capitalize dark:text-white" id="modal-title">
+                                Give a Review
+                            </h3>
+                            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                Your new project has been created. Invite your
+                                team to collaborate on this project.
+                            </p>
+                            {errors.rating && <p className="text-red-500 text-xs italic">Rating is required</p>}
+                            <label className="block my-3" htmlFor="rating">
+                                <span className="sr-only">Rating</span>
+                                <select
+                                    id="rating"
+                                    {...register("rating", { required: true })}
+                                    className="block w-full px-4 py-3 text-sm text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+                                >
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5" selected>5</option>
+                                </select>
+                            </label>
+                            {errors.title && <p className="text-red-500 text-xs italic">Title is required</p>}
+                            <label>
                                 <input
-                                    type="submit"
-                                    value="Review"
-                                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm"
-                                />
-                                <button
-                                    type="button"
-                                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm"
+                                    id="title"
+                                    type="text"
+                                    {...register("title", { required: true })}
+                                    placeholder="Give a Title"
+                                    className="block w-full px-4 py-3 text-sm text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300" />
+                            </label>
+                            {errors.details && <p className="text-red-500 text-xs italic">Details is required</p>}
+                            <label className="block mt-3" htmlFor="details">
+                                <textarea
+                                    id="details"
+                                    {...register("details", { required: true })}
+                                    placeholder="Describe more..."
+                                    className="block w-full px-4 py-3 text-sm text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300" />
+                            </label>
+
+                            <div className="mt-4 sm:flex sm:items-center sm:-mx-2">
+                                <button type="button"
                                     onClick={() => setOpen(false)}
                                     ref={cancelButtonRef}
-                                >
+                                    className="w-full px-4 py-2 text-sm font-medium tracking-wide text-gray-700 capitalize transition-colors duration-300 transform border border-gray-200 rounded-md sm:w-1/2 sm:mx-2 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800 hover:bg-gray-100 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-40">
                                     Cancel
                                 </button>
+                                <button
+                                    type="submit"
+                                    onClick={() => setOpen(false)}
+                                    ref={cancelButtonRef}
+                                    className="w-full px-4 py-2 mt-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-md sm:mt-0 sm:w-1/2 sm:mx-2 hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40">
+                                    Submit
+                                </button>
                             </div>
-                        </div>
-                    </Transition.Child>
+                        </div >
+                    </div >
                 </form>
             </Dialog>
         </Transition.Root>
