@@ -9,11 +9,9 @@ import { IProduct } from "../types";
 export default function EditProduct() {
 
     const { id } = useParams() as { id: string };
-    console.log(id)
     const { user } = useAppSelector((state) => state.user)
     console.log(user)
     const { data: product } = useGetProductByIdQuery(id as string)
-    console.log(product)
     const [ updateProduct ] = useUpdateProductMutation()
 
     const { register, handleSubmit } = useForm<IProduct>()

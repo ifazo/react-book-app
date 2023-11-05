@@ -5,7 +5,7 @@ import { useState } from 'react'
 import Modal from './Modal'
 import toast from 'react-hot-toast'
 import { CalendarIcon, PencilAltIcon, TrashIcon, UserIcon } from '@heroicons/react/outline'
-import jwt_decode from "jwt-decode";
+import { useAppSelector } from '../provider/hook'
 
 const reviews = { average: 4, totalCount: 1624 }
 
@@ -15,14 +15,17 @@ function classNames(...classes: string[]) {
 
 export default function ProductDetails() {
 
+    const [ open, setOpen ] = useState(false)
     const { id } = useParams();
     const { data: product } = useGetProductByIdQuery(id as string);
+    const { user } = useAppSelector((state) => state.user);
+    const email = user?.email as string;
 
     const [ postStatus ] = usePostStatusMutation()
     const [ deleteProduct ] = useDeleteProductMutation()
 
     const handleStatus = () => {
-        postStatus({ id: id, body: { status: 'wishlist' } })
+        postStatus({ id: id, body: { status: 'wishlist', ...product,  } })
             .unwrap()
             .then((res) => {
                 console.log(res)
@@ -30,11 +33,11 @@ export default function ProductDetails() {
                     toast.error(res.message)
                 }
                 else {
-                    toast.success('Product added to wishlist successfully')
+                    toast.success('Book added to wishlist')
                 }
             }).catch((err) => {
                 console.log(err)
-                toast.error('Failed to add product to wishlist')
+                toast.error('Failed to add Book')
             })
     }
 
@@ -42,17 +45,11 @@ export default function ProductDetails() {
         deleteProduct(id as string)
             .unwrap()
             .then(() => {
-                toast.success('Product deleted successfully')
+                toast.success('Book deleted successfully')
             }).catch(() => {
-                toast.error('Failed to delete product')
+                toast.error('Failed to delete Book')
             })
     }
-
-    const [ open, setOpen ] = useState(false)
-    // const cancelButtonRef = useRef(null)
-    const token = localStorage.getItem('token') as string;
-    const decodedToken = jwt_decode(token)
-    console.log(decodedToken)
 
     return (
         <div className="bg-white">
@@ -126,7 +123,7 @@ export default function ProductDetails() {
                             </div>
                             <div className="mt-6 flex items-center">
                                 <CalendarIcon className="flex-shrink-0 w-5 h-5" aria-hidden="true" />
-                                <p className="ml-2 font-medium text-base text-gray-700">{product?.date.toString()}</p>
+                                <p className="ml-2 font-medium text-base text-gray-700">{product?.date}</p>
                             </div>
                         </div>
 
@@ -151,34 +148,45 @@ export default function ProductDetails() {
                         </h2>
 
                         <form>
-                            <div className="flex justify-between">
-                                <Link
-                                    to={`/edit/${id}`}
-                                    type="button"
-                                    className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                >
-                                    <PencilAltIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
-                                    Edit
-                                </Link>
-                                <button
-                                    onClick={() => handleDelete()}
-                                    type="button"
-                                    className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                                >
-                                    <TrashIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
-                                    Delete
-                                </button>
-
-                            </div>
-                            {/* <div className="mt-4">
-                                <a href="#" className="group inline-flex text-sm text-gray-500 hover:text-gray-700">
-                                    <span>{product?.date}</span>
-                                    <QuestionMarkCircleIcon
-                                        className="flex-shrink-0 ml-2 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                                        aria-hidden="true"
-                                    />
-                                </a>
-                            </div> */}
+                                {email === product?.email ? (
+                                    <div className="flex justify-between">
+                                        <Link
+                                        to={`/edit/${id}`}
+                                        type="button"
+                                        className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                    >
+                                        <PencilAltIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+                                        Edit
+                                    </Link>
+                                        <button
+                                            onClick={() => handleDelete()}
+                                            type="button"
+                                            className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                        >
+                                            <TrashIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+                                            Delete
+                                        </button>
+                                    </div>
+                                )
+                                : (
+                                    <div className="flex justify-between">
+                                        <button
+                                            type="button"
+                                            aria-disabled="true"
+                                            className="cursor-not-allowed inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                        >
+                                            <PencilAltIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+                                            Edit
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className="cursor-not-allowed inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                        >
+                                            <TrashIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+                                            Delete
+                                        </button>
+                                    </div>
+                                    )}
                             <div className="mt-5">
                                 <button
                                     type="button"

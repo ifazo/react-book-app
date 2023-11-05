@@ -11,7 +11,7 @@ function classNames(...classes: string[]) {
 export default function Reviews() {
     const {id } = useParams()
     const { data } = useGetReviewsQuery(id as string);
-    console.log(data)
+    
     return (
         <div className="bg-white">
             <div className="max-w-2xl mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:max-w-7xl lg:py-8 lg:px-8">
@@ -41,7 +41,10 @@ export default function Reviews() {
                                         </div>
                                     </div>
 
-                                    <div className="mt-4 space-y-6 text-base italic text-gray-600">
+                                    <div className="mt-4 text-base font-medium text-gray-700">
+                                        <p>{review.title}</p>
+                                    </div>
+                                    <div className="italic text-base text-gray-700">
                                         <p>{review.details}</p>
                                     </div>
                                 </div>

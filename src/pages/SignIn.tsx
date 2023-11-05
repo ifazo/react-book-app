@@ -1,10 +1,10 @@
 import { useForm } from "react-hook-form"
-import { Link } from "react-router-dom"
-import { useAppDispatch, useAppSelector } from "../provider/hook";
-import { googleLogin, loginUser } from "../provider/features/userSlice";
+import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { IAuth } from "../types";
 import { useSignInMutation } from "../provider/api/apiSlice";
+import { useAppDispatch } from "../provider/hook";
+import { setUser } from "../provider/features/userSlice";
 
 export default function SignIn() {
 
@@ -15,31 +15,20 @@ export default function SignIn() {
   } = useForm<IAuth>();
 
   const dispatch = useAppDispatch();
-  const { user } = useAppSelector((state) => state.user);
-  console.log(user);
   const [ signIn ] = useSignInMutation()
 
   const onSubmit = (data: IAuth) => {
-    void dispatch(loginUser({ email: data.email, password: data.password }))
     signIn(data)
-      .unwrap()
       .then((res) => {
-        localStorage.setItem("token", res);
+        dispatch(setUser(data.email));
+        localStorage.setItem("token", JSON.stringify(res.data.token));
         toast.success("Login User Successfully");
-      }).catch((err) => {
-        console.error(err.message);
+      }).catch(() => {
+        dispatch(setUser(null));
+        localStorage.removeItem("token");
         toast.error("Login User Failed");
       });
   };
-
-  const handleGoogleLogin = () => {
-    dispatch(googleLogin())
-      .then(() => {
-      toast.success("Login User Successfully");
-    }).catch((error: { message: string; }) => {
-      toast.error(error.message);
-    });
-  }
 
   return (
     <div className="bg-white">
@@ -96,11 +85,11 @@ export default function SignIn() {
               <div className="mt-2">
                 <input
                   id="password"
-                  placeholder="password"
                   type="password"
+                  {...register("password", { required: true })}
+                  placeholder="password"
                   autoComplete="password"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  {...register("password", { required: true })}
                 />
                 {errors.password && <span>Password field is required</span>}
               </div>
@@ -116,16 +105,6 @@ export default function SignIn() {
             </div>
 
           </form>
-
-          <div>
-            <button
-              type="submit"
-              onClick={handleGoogleLogin}
-              className="flex w-full mt-5 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Sign in with Google
-            </button>
-          </div>
 
           <p className="mt-10 text-center text-sm text-gray-500">
             Not have an account?{' '}

@@ -1,40 +1,29 @@
-import { useForm } from "react-hook-form"
-import { useAppDispatch, useAppSelector } from "../provider/hook";
-import { createUser, googleLogin } from "../provider/features/userSlice";
+import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { useSignUpMutation } from "../provider/api/apiSlice";
 import { IAuth } from "../types";
+import { useAppDispatch } from "../provider/hook";
+import { setUser } from "../provider/features/userSlice";
 
 export default function SignUp() {
 
   const dispatch = useAppDispatch();
-  const { user } = useAppSelector((state) => state.user);
-  console.log(user);
   const { register, handleSubmit, formState: { errors } } = useForm<IAuth>()
   const [ signUp ] = useSignUpMutation()
 
   const onSubmit = async (data: IAuth) => {
-    dispatch(createUser({ email: data.email, password: data.password }))
     signUp(data)
-      .unwrap()
       .then((res) => {
-        console.log(res)
-        localStorage.setItem("token", res);
+        dispatch(setUser(data.email));
+        localStorage.setItem("token", JSON.stringify(res.data.token));
         toast.success("User created successfully!");
-      }).catch((error) => {
-        toast.error(error.message);
+      }).catch(() => {
+        dispatch(setUser(null));
+        localStorage.removeItem("token");
+        toast.error("User creation failed!");
       })
   };
-
-  const handleGoogleLogin = () => {
-    void dispatch(googleLogin())
-      .then(() => {
-        toast.success("Login user Successfully");
-      }).catch((error) => {
-        console.log(error.message);
-      });
-  }
 
   return (
     <div className="bg-white">
@@ -129,16 +118,6 @@ export default function SignUp() {
             </div>
 
           </form>
-
-          <div>
-            <button
-              onClick={handleGoogleLogin}
-              type="submit"
-              className="flex w-full mt-5 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Sign up with Google
-            </button>
-          </div>
 
           <p className="mt-10 text-center text-sm text-gray-500">
             Already have an account?{' '}

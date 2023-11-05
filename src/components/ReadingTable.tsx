@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import { useAppSelector } from "../provider/hook";
-import { useGetStatusByUserQuery } from "../provider/api/apiSlice";
+import { useGetStatusQuery } from "../provider/api/apiSlice";
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
@@ -13,14 +13,14 @@ export default function ReadingTable() {
     const { user } = useAppSelector((state) => state.user);
     const email = user.email
 
-    const { data } = useGetStatusByUserQuery(email as string)
+    const { data } = useGetStatusQuery(email as string)
 
     const handleAddToFinished = (id: string) => {
         const statusItem = {
             status: 'finished'
         };
         try {
-            axios.patch(`http://localhost:5000/api/book/status/${id}`, statusItem)
+            axios.patch(`https://ifaz-react-ts-server.vercel.app/api/book/status/${id}`, statusItem)
                 .then(() => {
                     toast.success('Added to finished list');
                 })
@@ -38,7 +38,7 @@ export default function ReadingTable() {
                 <div className="sm:flex-auto">
                     <h1 className="text-xl font-semibold text-gray-900">Reading Books</h1>
                     <p className="mt-2 text-sm text-gray-700">
-                        A list of all the books added by {user.name}
+                        A list of all the books added by {user.email}
                     </p>
                 </div>
                 <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">

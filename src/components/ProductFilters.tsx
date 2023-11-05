@@ -3,8 +3,8 @@ import { Dialog, Disclosure, Menu, Popover, Transition } from '@headlessui/react
 import { XIcon } from '@heroicons/react/outline'
 import { ChevronDownIcon, SearchIcon } from '@heroicons/react/solid'
 import { Link } from 'react-router-dom'
-import { useGetProductsQuery } from '../provider/api/apiSlice'
 import { IProduct } from '../types'
+import { useGetProductsBySearchQuery } from '../provider/api/apiSlice'
 
 const sortOptions = [
     { name: 'Most Popular', href: '#' },
@@ -13,17 +13,8 @@ const sortOptions = [
 ]
 const filters = [
     {
-        id: 'category',
-        name: 'Category',
-        options: [
-            { value: 'tees', label: 'Tees' },
-            { value: 'crewnecks', label: 'Crewnecks' },
-            { value: 'hats', label: 'Hats' },
-        ],
-    },
-    {
-        id: 'brand',
-        name: 'Brand',
+        id: 'genre',
+        name: 'Genre',
         options: [
             { value: 'clothing-company', label: 'Clothing Company' },
             { value: 'fashion-inc', label: 'Fashion Inc.' },
@@ -31,23 +22,14 @@ const filters = [
         ],
     },
     {
-        id: 'color',
-        name: 'Color',
+        id: 'year',
+        name: 'Year',
         options: [
             { value: 'white', label: 'White' },
             { value: 'black', label: 'Black' },
             { value: 'grey', label: 'Grey' },
         ],
-    },
-    {
-        id: 'sizes',
-        name: 'Sizes',
-        options: [
-            { value: 's', label: 'S' },
-            { value: 'm', label: 'M' },
-            { value: 'l', label: 'L' },
-        ],
-    },
+    }
 ]
 
 function classNames(...classes: string[]) {
@@ -59,11 +41,9 @@ export default function ProductFilters() {
     const [ search, setSearch ] = useState('')
     const searchRef = useRef<HTMLInputElement>(null);
 
-    const { data } = useGetProductsQuery(search)
-    console.log(data)
+    const { data } = useGetProductsBySearchQuery(search)
 
     const handleSearch = () => {
-        console.log(searchRef.current?.value)
         setSearch(searchRef.current?.value || '')
     }
 
@@ -211,8 +191,6 @@ export default function ProductFilters() {
                                 </Transition>
                             </Menu>
 
-
-
                             <div className="min-w-0 flex-1 md:px-8 lg:px-0 xl:col-span-6">
                                 <div className="flex items-center px-6 py-4 md:max-w-3xl md:mx-auto lg:max-w-none lg:mx-0 xl:px-0">
                                     <button
@@ -259,16 +237,16 @@ export default function ProductFilters() {
                             </button>
 
                             <Popover.Group className="hidden sm:flex sm:items-baseline sm:space-x-8">
-                                {filters.map((section, sectionIdx) => (
+                                {filters.map((section) => (
                                     <Popover as="div" key={section.name} id="desktop-menu" className="relative z-10 inline-block text-left">
                                         <div>
                                             <Popover.Button className="group inline-flex items-center justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
                                                 <span>{section.name}</span>
-                                                {sectionIdx === 0 ? (
+                                                {/* {sectionIdx === 0 ? (
                                                     <span className="ml-1.5 rounded py-0.5 px-1.5 bg-gray-200 text-xs font-semibold text-gray-700 tabular-nums">
                                                         1
                                                     </span>
-                                                ) : null}
+                                                ) : null} */}
                                                 <ChevronDownIcon
                                                     className="flex-shrink-0 -mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500"
                                                     aria-hidden="true"

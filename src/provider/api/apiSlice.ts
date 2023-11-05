@@ -1,37 +1,39 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
-import type { IAuth, IProduct, IReview } from "../../types";
 
 const token = localStorage.getItem("token");
 
 export const api = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_BASEURL }),
+  baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_URL }),
   tagTypes: ["Book", "review", "status"],
   endpoints: (builder) => ({
-    signUp: builder.mutation<IAuth, IAuth>({
+    signUp: builder.mutation({
       query: (body) => ({
-        url: "/auth/sign-up",
+        url: "/auth/signup",
         method: "POST",
         body,
       }),
     }),
-    signIn: builder.mutation<IAuth, IAuth>({
+    signIn: builder.mutation({
       query: (body) => ({
-        url: "/auth/sign-in",
+        url: "/auth/signin",
         method: "POST",
         body,
       }),
     }),
-    getProducts: builder.query<IProduct[], string>({
+    getProducts: builder.query({
+      query: () => "/books",
+    }),
+    getProductsBySearch: builder.query({
       query: (data) => `/books?search=${data}`,
     }),
-    getProductById: builder.query<IProduct, string>({
+    getProductById: builder.query({
       query: (id) => `/books/${id}`,
     }),
-    getProductsByUser: builder.query<IProduct[], string>({
+    getProductsByUser: builder.query({
       query: (email) => `/books/user/${email}`,
     }),
-    postProduct: builder.mutation<IProduct, IProduct>({
+    postProduct: builder.mutation({
       query: (body) => ({
         url: "/books",
         method: "POST",
@@ -53,7 +55,7 @@ export const api = createApi({
       }),
       invalidatesTags: ["Book"],
     }),
-    deleteProduct: builder.mutation<void, string>({
+    deleteProduct: builder.mutation({
       query: (id) => ({
         url: `/books/${id}`,
         method: "DELETE",
@@ -64,7 +66,7 @@ export const api = createApi({
       }),
       invalidatesTags: ["Book"],
     }),
-    getReviews: builder.query<IReview, string>({
+    getReviews: builder.query({
       query: (id) => `/reviews/${id}`,
     }),
     postReview: builder.mutation({
@@ -78,14 +80,25 @@ export const api = createApi({
       }),
       invalidatesTags: ["review"],
     }),
-    getStatusByUser: builder.query<IProduct, string>({
-      query: (email) => `/book/status/${email}`,
+    getStatus: builder.query({
+      query: (email) => `/status/${email}`,
     }),
     postStatus: builder.mutation({
-      query: ({id, body}) => ({
-      url: `/status/${id}`,
+      query: ({ id, body }) => ({
+        url: `/status/${id}`,
         method: "POST",
         body,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+      invalidatesTags: ["status"],
+    }),
+    deleteStatus: builder.mutation({
+      query: (id) => ({
+        url: `/status/${id}`,
+        method: "DELETE",
+        body: { id },
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -99,11 +112,13 @@ export const {
   useSignUpMutation,
   useSignInMutation,
   useGetProductsQuery,
+  useGetProductsBySearchQuery,
   useGetProductByIdQuery,
   useGetProductsByUserQuery,
   useGetReviewsQuery,
-  useGetStatusByUserQuery,
+  useGetStatusQuery,
   usePostStatusMutation,
+  useDeleteStatusMutation,
   usePostReviewMutation,
   usePostProductMutation,
   useUpdateProductMutation,
