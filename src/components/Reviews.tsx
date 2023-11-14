@@ -1,6 +1,6 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { StarIcon } from '@heroicons/react/solid'
-import { useGetReviewsQuery } from '../provider/api/apiSlice';
+import { useGetReviewsQuery } from '../app/api/apiSlice';
 import { useParams } from 'react-router-dom';
 import { IReview } from '../types';
 
@@ -9,9 +9,9 @@ function classNames(...classes: string[]) {
 }
 
 export default function Reviews() {
-    const {id } = useParams()
+    const { id } = useParams()
     const { data } = useGetReviewsQuery(id as string);
-    
+    console.log(data)
     return (
         <div className="bg-white">
             <div className="max-w-2xl mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:max-w-7xl lg:py-8 lg:px-8">

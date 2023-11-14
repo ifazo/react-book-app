@@ -1,8 +1,8 @@
 import { Disclosure } from '@headlessui/react'
-import { useAppDispatch, useAppSelector } from '../provider/hook'
+import { useAppDispatch, useAppSelector } from '../app/hook'
 import { toast } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
-import { setUser } from '../provider/features/userSlice'
+import { setUser } from '../app/features/userSlice'
 
 export default function Header() {
   const dispatch = useAppDispatch();

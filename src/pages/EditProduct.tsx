@@ -1,13 +1,13 @@
 import { toast } from "react-hot-toast";
-import { useGetProductByIdQuery, useUpdateProductMutation } from "../provider/api/apiSlice";
-import { useParams } from "react-router-dom";
-import { useAppSelector } from "../provider/hook";
+import { useGetProductByIdQuery, useUpdateProductMutation } from "../app/api/apiSlice";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAppSelector } from "../app/hook";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { IProduct } from "../types";
 
 
 export default function EditProduct() {
-
+    const navigate = useNavigate();
     const { id } = useParams() as { id: string };
     const { user } = useAppSelector((state) => state.user)
     console.log(user)
@@ -30,7 +30,10 @@ export default function EditProduct() {
                 const imgUrl = res.data?.display_url;
                 data.image = imgUrl
                 updateProduct({ id: id, data: data })
-                    .then(() => toast.success('Product edited successfully'))
+                    .then(() => {
+                        toast.success('Product edited successfully')
+                        navigate(0)
+                    })
                     .catch(() => toast.error('Unauthorize user request'))
             })
     }

@@ -4,13 +4,11 @@ import { Dialog, Transition } from '@headlessui/react'
 import Footer from '../components/Footer'
 import Navbar from '../components/Header'
 import { Link } from 'react-router-dom'
-import ProductTable from '../components/ProductTable'
 import WishlistTable from '../components/WishlistTable'
 import ReadingTable from '../components/ReadingTable'
 import FinishedTable from '../components/FinishedTable'
 
 const navigation = [
-    { name: 'Books', current: false, component: <ProductTable /> },
     { name: 'Wishlist', current: false, component: <WishlistTable /> },
     { name: 'Reading', current: false, component: <ReadingTable /> },
     { name: 'Finished', current: false, component: <FinishedTable /> },

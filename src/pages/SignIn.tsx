@@ -1,31 +1,36 @@
 import { useForm } from "react-hook-form"
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { IAuth } from "../types";
-import { useSignInMutation } from "../provider/api/apiSlice";
-import { useAppDispatch } from "../provider/hook";
-import { setUser } from "../provider/features/userSlice";
+import { useSignInMutation } from "../app/api/apiSlice";
+import { useAppDispatch } from "../app/hook";
+import { User, setUser } from "../app/features/userSlice";
+import { jwtDecode } from "jwt-decode";
 
 export default function SignIn() {
-
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const [ signIn ] = useSignInMutation()
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<IAuth>();
 
-  const dispatch = useAppDispatch();
-  const [ signIn ] = useSignInMutation()
-
   const onSubmit = (data: IAuth) => {
+    console.log(data)
     signIn(data)
+      .unwrap()
       .then((res) => {
-        dispatch(setUser(data.email));
-        localStorage.setItem("token", JSON.stringify(res.data.token));
+        localStorage.setItem("token", res.token);
+        const decoded = jwtDecode(res.token) as User;
+        dispatch(setUser(decoded));
         toast.success("Login User Successfully");
-      }).catch(() => {
-        dispatch(setUser(null));
+        navigate("/");
+      }).catch((err) => {
+        console.log(err)
         localStorage.removeItem("token");
+        dispatch(setUser(null));
         toast.error("Login User Failed");
       });
   };
@@ -61,11 +66,10 @@ export default function SignIn() {
               <div className="mt-2">
                 <input
                   id="email"
-                  placeholder="email"
                   type="email"
-                  autoComplete="email"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  placeholder="email"
                   {...register("email", { required: true })}
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
                 {errors.email && <span>Password field is required</span>}
               </div>
@@ -86,9 +90,8 @@ export default function SignIn() {
                 <input
                   id="password"
                   type="password"
-                  {...register("password", { required: true })}
                   placeholder="password"
-                  autoComplete="password"
+                  {...register("password", { required: true })}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
                 {errors.password && <span>Password field is required</span>}

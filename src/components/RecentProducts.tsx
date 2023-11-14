@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom"
-import { useGetProductsQuery } from "../provider/api/apiSlice"
 import { IProduct } from "../types"
+import { useGetRecentProductsQuery } from "../app/api/apiSlice"
 
 export default function RecentProducts() {
-  const { data } = useGetProductsQuery()
+  const { data } = useGetRecentProductsQuery({})
   console.log(data)
   return (
     <div className="bg-white">
@@ -33,7 +33,7 @@ export default function RecentProducts() {
                     </div>
                     <div className="mt-6">
                       <h3 className="mt-1 font-semibold text-gray-900">
-                        <Link to={product._id}>
+                        <Link to={`/books/${product._id}`}>
                           <span className="absolute inset-0" />
                           {product.title}
                         </Link>

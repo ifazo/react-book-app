@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
 
 const token = localStorage.getItem("token");
-
+// console.log(token);
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_URL }),
@@ -23,6 +23,9 @@ export const api = createApi({
     }),
     getProducts: builder.query({
       query: () => "/books",
+    }),
+    getRecentProducts: builder.query({
+      query: () => "/books/recent",
     }),
     getProductsBySearch: builder.query({
       query: (data) => `/books?search=${data}`,
@@ -81,11 +84,11 @@ export const api = createApi({
       invalidatesTags: ["review"],
     }),
     getStatus: builder.query({
-      query: (email) => `/status/${email}`,
+      query: ({user, status}) => `/status?user=${user}&status=${status}`,
     }),
     postStatus: builder.mutation({
-      query: ({ id, body }) => ({
-        url: `/status/${id}`,
+      query: (body) => ({
+        url: "/status",
         method: "POST",
         body,
         headers: {
@@ -93,6 +96,17 @@ export const api = createApi({
         },
       }),
       invalidatesTags: ["status"],
+    }),
+    updateStatus: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/status/${id}`,
+        method: "PATCH",
+        body: data,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+      invalidatesTags: [ "status" ],
     }),
     deleteStatus: builder.mutation({
       query: (id) => ({
@@ -112,12 +126,14 @@ export const {
   useSignUpMutation,
   useSignInMutation,
   useGetProductsQuery,
+  useGetRecentProductsQuery,
   useGetProductsBySearchQuery,
   useGetProductByIdQuery,
   useGetProductsByUserQuery,
   useGetReviewsQuery,
   useGetStatusQuery,
   usePostStatusMutation,
+  useUpdateStatusMutation,
   useDeleteStatusMutation,
   usePostReviewMutation,
   usePostProductMutation,

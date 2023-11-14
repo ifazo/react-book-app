@@ -1,37 +1,40 @@
-import { Link } from "react-router-dom"
-import { useAppSelector } from "../provider/hook";
-import { useDeleteStatusMutation, useGetStatusQuery, usePostStatusMutation } from "../provider/api/apiSlice";
+import { Link, useNavigate } from "react-router-dom"
+import { useAppSelector } from "../app/hook";
+import { useDeleteStatusMutation, useGetStatusQuery, useUpdateStatusMutation } from "../app/api/apiSlice";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { IStatus } from "../types";
 
 export default function WishlistTable() {
-
+    const navigate = useNavigate();
     const [ open, setOpen ] = useState(false)
-
     const { user } = useAppSelector((state) => state.user);
-    const email = user.email
-
-    const { data } = useGetStatusQuery(email as string)
-    // console.log(data)
-    const [ postStatus ] = usePostStatusMutation();
-    const [deleteStatus] = useDeleteStatusMutation();
+    console.log(user)
+    const { data } = useGetStatusQuery({ status: 'wishlist', user: user?.email })
+    console.log(data)
+    const [ updateStatus ] = useUpdateStatusMutation();
+    const [ deleteStatus ] = useDeleteStatusMutation();
 
     const handleAddToReading = (id: string) => {
-            postStatus({ id, status: 'reading' })
-                .then(() => {
-                    toast.success('Added to reading list');
-                })
-                .catch(() => {
-                    toast.error('Something went wrong');
-                });
+        const data = { status: 'reading' }
+        updateStatus({ id, data })
+            .then((res) => {
+                console.log(res)
+                toast.success('Added to reading list');
+                navigate(0)
+            })
+            .catch((err) => {
+                console.log(err)
+                toast.error('Something went wrong');
+            });
     };
 
-    const handleDeleteStatus = (id: string) => { 
-        deleteStatus(id)
+    const handleDeleteStatus = (id: string) => {
+        deleteStatus(id as string)
             .then((res) => {
                 console.log(res)
                 toast.success('Deleted from wishlist');
+                navigate(0)
             })
             .catch(() => {
                 toast.error('Something went wrong');
@@ -44,7 +47,7 @@ export default function WishlistTable() {
                 <div className="sm:flex-auto">
                     <h1 className="text-xl font-semibold text-gray-900">Wishlist Books</h1>
                     <p className="mt-2 text-sm text-gray-700">
-                        A list of all the books added by {user.email}
+                        A list of all the books added by {user?.name}
                     </p>
                 </div>
                 <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
@@ -106,7 +109,7 @@ export default function WishlistTable() {
                                                 </button>
                                             </td>
                                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-center sm:pr-6 lg:pr-8">
-                                                <button 
+                                                <button
                                                     type="button"
                                                     onClick={() => { setOpen(!open), handleDeleteStatus(status._id) }}
                                                     className="text-red-600 hover:text-red-900">

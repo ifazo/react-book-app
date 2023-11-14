@@ -2,14 +2,14 @@
 import { Fragment, useRef } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { IReview } from '../types'
-import { useAppSelector } from '../provider/hook'
-import { usePostReviewMutation } from '../provider/api/apiSlice'
+import { useAppSelector } from '../app/hook'
+import { usePostReviewMutation } from '../app/api/apiSlice'
 import toast from 'react-hot-toast'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 export default function Modal({ open, setOpen }: { open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
-
+    const navigate = useNavigate();
     const { id } = useParams();
     const cancelButtonRef = useRef(null)
 
@@ -19,12 +19,16 @@ export default function Modal({ open, setOpen }: { open: boolean, setOpen: React
     const { register, handleSubmit, formState: { errors } } = useForm<IReview>()
     const onSubmit: SubmitHandler<IReview> = (data: IReview) => {
         console.log(data)
+        data.rating = Number(data.rating)
         if (!user) return toast.error('Please login first')
         postReview({ id, data })
-            .then(() => toast.success('Review added successfully'))
+            .then(() => {
+                toast.success('Review added successfully')
+                navigate(0)
+            })
             .catch(err => {
                 console.log(err)
-                toast.error('Something went wrong')
+                toast.error('Login or Sign up first')
             })
     }
 

@@ -1,12 +1,13 @@
-import { useAppSelector } from '../provider/hook';
+import { useAppSelector } from '../app/hook';
 import { toast } from "react-hot-toast";
-import { usePostProductMutation } from "../provider/api/apiSlice";
+import { usePostProductMutation } from "../app/api/apiSlice";
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { IProduct } from '../types';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function AddProduct() {
-
+    const navigate = useNavigate();
     const { user } = useAppSelector((state) => state.user);
     console.log(user)
     const [ postProduct ] = usePostProductMutation();
@@ -27,8 +28,15 @@ export default function AddProduct() {
                 data.image = imgUrl;
                 postProduct(data)
             })
-            .then(() => toast.success('Product added successfully'))
-            .catch(() => toast.error('Unauthorize user request'))
+            .then((res) => {
+                console.log(res)
+                toast.success('Product added successfully')
+                navigate(0)
+            })
+            .catch((err) => {
+                console.log(err)
+                toast.error('Unauthorize user request')
+            })
     };
 
     return (
@@ -163,7 +171,12 @@ export default function AddProduct() {
                 </div>
             </div>
             <div className="mt-6 flex items-center justify-end gap-x-6">
-                <button type="button" className="text-sm font-semibold leading-6 text-gray-900">
+                <button
+                    type="button"
+                    onClick={
+                        () => navigate('/')
+                    }
+                    className="text-sm font-semibold leading-6 text-gray-900">
                     Cancel
                 </button>
                 <input

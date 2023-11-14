@@ -9,6 +9,7 @@ import ProductCategory from "../pages/ProductCategory";
 import ProductDetailsPage from "../pages/ProductDetailsPage";
 import DashboardPage from "../pages/DashboardPage";
 import EditProduct from "../pages/EditProduct";
+import PrivateRouter from "./PrivateRouter";
 
 const router = createBrowserRouter([
     {
@@ -39,7 +40,7 @@ const router = createBrowserRouter([
     },
     {
         path: "/dashboard",
-        element: <DashboardPage />
+        element: <PrivateRouter><DashboardPage /></PrivateRouter>
     },
     {
         path: "/sign-in",

@@ -4,7 +4,7 @@ import { XIcon } from '@heroicons/react/outline'
 import { ChevronDownIcon, SearchIcon } from '@heroicons/react/solid'
 import { Link } from 'react-router-dom'
 import { IProduct } from '../types'
-import { useGetProductsBySearchQuery } from '../provider/api/apiSlice'
+import { useGetProductsBySearchQuery } from '../app/api/apiSlice'
 
 const sortOptions = [
     { name: 'Most Popular', href: '#' },

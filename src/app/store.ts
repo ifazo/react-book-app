@@ -6,16 +6,19 @@ import storage from "redux-persist/lib/storage";
 import { persistReducer } from "redux-persist";
 import { combineReducers } from "@reduxjs/toolkit";
 
-const reducers = combineReducers({
-  [api.reducerPath]: api.reducer,
-  products: productSlice.reducer,
-  user: userSlice.reducer,
-});
-
 const persistConfig = {
   key: "root",
+  version: 1,
   storage,
+  whitelist: ["user"],
+  blacklist: ["api"],
 };
+
+const reducers = combineReducers({
+  [api.reducerPath]: api.reducer,
+  user: userSlice.reducer,
+  products: productSlice.reducer,
+});
 
 const persistedReducer = persistReducer(persistConfig, reducers);
 

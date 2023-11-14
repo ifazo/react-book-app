@@ -1,23 +1,23 @@
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
-import { Link } from "react-router-dom";
-import { useSignUpMutation } from "../provider/api/apiSlice";
+import { Link, useNavigate } from "react-router-dom";
+import { useSignUpMutation } from "../app/api/apiSlice";
 import { IAuth } from "../types";
-import { useAppDispatch } from "../provider/hook";
-import { setUser } from "../provider/features/userSlice";
+import { useAppDispatch } from "../app/hook";
+import { setUser } from "../app/features/userSlice";
 
 export default function SignUp() {
-
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { register, handleSubmit, formState: { errors } } = useForm<IAuth>()
   const [ signUp ] = useSignUpMutation()
 
   const onSubmit = async (data: IAuth) => {
     signUp(data)
-      .then((res) => {
-        dispatch(setUser(data.email));
-        localStorage.setItem("token", JSON.stringify(res.data.token));
+      .unwrap()
+      .then(() => {
         toast.success("User created successfully!");
+        navigate("/sign-in");
       }).catch(() => {
         dispatch(setUser(null));
         localStorage.removeItem("token");

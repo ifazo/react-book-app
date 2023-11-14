@@ -1,11 +1,11 @@
-import { Link, useParams } from 'react-router-dom'
-import { useDeleteProductMutation, useGetProductByIdQuery, usePostStatusMutation } from '../provider/api/apiSlice'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useDeleteProductMutation, useGetProductByIdQuery, usePostStatusMutation } from '../app/api/apiSlice'
 import { StarIcon } from '@heroicons/react/solid'
 import { useState } from 'react'
 import Modal from './Modal'
 import toast from 'react-hot-toast'
 import { CalendarIcon, PencilAltIcon, TrashIcon, UserIcon } from '@heroicons/react/outline'
-import { useAppSelector } from '../provider/hook'
+import { useAppSelector } from '../app/hook'
 
 const reviews = { average: 4, totalCount: 1624 }
 
@@ -14,29 +14,23 @@ function classNames(...classes: string[]) {
 }
 
 export default function ProductDetails() {
-
+    const navigate = useNavigate();
     const [ open, setOpen ] = useState(false)
     const { id } = useParams();
     const { data: product } = useGetProductByIdQuery(id as string);
+    // console.log(product)
     const { user } = useAppSelector((state) => state.user);
-    const email = user?.email as string;
-
+    console.log(user)
     const [ postStatus ] = usePostStatusMutation()
     const [ deleteProduct ] = useDeleteProductMutation()
 
     const handleStatus = () => {
-        postStatus({ id: id, body: { status: 'wishlist', ...product,  } })
+        postStatus({ status: 'wishlist', bookId: product._id, title: product.title, author: product.author, genre: product.genre })
             .unwrap()
-            .then((res) => {
-                console.log(res)
-                if (res.error) {
-                    toast.error(res.message)
-                }
-                else {
-                    toast.success('Book added to wishlist')
-                }
-            }).catch((err) => {
-                console.log(err)
+            .then(() => {
+                toast.success('Book added to wishlist')
+                navigate(0)
+            }).catch(() => {
                 toast.error('Failed to add Book')
             })
     }
@@ -46,6 +40,7 @@ export default function ProductDetails() {
             .unwrap()
             .then(() => {
                 toast.success('Book deleted successfully')
+                navigate(-1)
             }).catch(() => {
                 toast.error('Failed to delete Book')
             })
@@ -148,9 +143,9 @@ export default function ProductDetails() {
                         </h2>
 
                         <form>
-                                {email === product?.email ? (
-                                    <div className="flex justify-between">
-                                        <Link
+                            {user?.email === product?.email ? (
+                                <div className="flex justify-between">
+                                    <Link
                                         to={`/edit/${id}`}
                                         type="button"
                                         className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -158,16 +153,16 @@ export default function ProductDetails() {
                                         <PencilAltIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
                                         Edit
                                     </Link>
-                                        <button
-                                            onClick={() => handleDelete()}
-                                            type="button"
-                                            className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                                        >
-                                            <TrashIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
-                                            Delete
-                                        </button>
-                                    </div>
-                                )
+                                    <button
+                                        onClick={() => handleDelete()}
+                                        type="button"
+                                        className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                    >
+                                        <TrashIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+                                        Delete
+                                    </button>
+                                </div>
+                            )
                                 : (
                                     <div className="flex justify-between">
                                         <button
@@ -186,7 +181,7 @@ export default function ProductDetails() {
                                             Delete
                                         </button>
                                     </div>
-                                    )}
+                                )}
                             <div className="mt-5">
                                 <button
                                     type="button"
