@@ -29,12 +29,12 @@ const router = createBrowserRouter([
                 element: <ProductDetailsPage />
             },
             {
-                path: "/add",
-                element: <AddProducts />
+                path: "/books/add",
+                element: <PrivateRouter><AddProducts /></PrivateRouter>
             },
             {
-                path: "/edit/:id",
-                element: <EditProduct />
+                path: "/books/edit/:id",
+                element: <PrivateRouter><EditProduct /></PrivateRouter>
             }
         ]
     },

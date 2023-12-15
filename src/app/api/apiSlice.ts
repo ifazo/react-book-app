@@ -42,7 +42,7 @@ export const api = createApi({
         method: "POST",
         body,
         headers: {
-          Authorization: `Bearer ${token}`,
+          authorization: `Bearer ${token}`,
         },
       }),
       invalidatesTags: ["Book"],
@@ -53,7 +53,7 @@ export const api = createApi({
         method: "PATCH",
         body: data,
         headers: {
-          Authorization: `Bearer ${token}`,
+          authorization: `Bearer ${token}`,
         },
       }),
       invalidatesTags: ["Book"],
@@ -64,7 +64,7 @@ export const api = createApi({
         method: "DELETE",
         body: { id },
         headers: {
-          Authorization: `Bearer ${token}`,
+          authorization: `Bearer ${token}`,
         },
       }),
       invalidatesTags: ["Book"],
@@ -78,7 +78,7 @@ export const api = createApi({
         method: "POST",
         body: data,
         headers: {
-          Authorization: `Bearer ${token}`,
+          authorization: `Bearer ${token}`,
         },
       }),
       invalidatesTags: ["review"],
@@ -92,7 +92,7 @@ export const api = createApi({
         method: "POST",
         body,
         headers: {
-          Authorization: `Bearer ${token}`,
+          authorization: `Bearer ${token}`,
         },
       }),
       invalidatesTags: ["status"],
@@ -103,7 +103,7 @@ export const api = createApi({
         method: "PATCH",
         body: data,
         headers: {
-          Authorization: `Bearer ${token}`,
+          authorization: `Bearer ${token}`,
         },
       }),
       invalidatesTags: [ "status" ],
@@ -114,7 +114,7 @@ export const api = createApi({
         method: "DELETE",
         body: { id },
         headers: {
-          Authorization: `Bearer ${token}`,
+          authorization: `Bearer ${token}`,
         },
       }),
       invalidatesTags: ["status"],

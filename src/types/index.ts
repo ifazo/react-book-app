@@ -6,9 +6,7 @@ export interface IAuth {
 
 export interface IProduct {
   _id: string;
-  id: string;
   user: string;
-  email: string;
   title: string;
   price: number;
   genre: string;

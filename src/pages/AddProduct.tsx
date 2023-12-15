@@ -1,20 +1,18 @@
-import { useAppSelector } from '../app/hook';
 import { toast } from "react-hot-toast";
 import { usePostProductMutation } from "../app/api/apiSlice";
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { IProduct } from '../types';
 import { useNavigate } from 'react-router-dom';
 
 
 export default function AddProduct() {
     const navigate = useNavigate();
-    const { user } = useAppSelector((state) => state.user);
-    console.log(user)
     const [ postProduct ] = usePostProductMutation();
 
     const { register, handleSubmit, formState: { errors } } = useForm<IProduct>()
 
-    const onSubmit: SubmitHandler<IProduct> = (data) => {
+    const onSubmit = async (data: IProduct) => {
+        // console.log(data)
         const imgToken = import.meta.env.VITE_IMGBB_TOKEN
         const formData = new FormData();
         formData.append('image', data.image[ 0 ]);
@@ -25,17 +23,16 @@ export default function AddProduct() {
             .then(res => res.json())
             .then(res => {
                 const imgUrl = res.data?.display_url;
+                console.log(imgUrl)
                 data.image = imgUrl;
-                postProduct(data)
+                return postProduct(data)
             })
-            .then((res) => {
-                console.log(res)
+            .then(() => {
                 toast.success('Product added successfully')
                 navigate(0)
             })
-            .catch((err) => {
-                console.log(err)
-                toast.error('Unauthorize user request')
+            .catch(() => {
+                toast.error('Something went wrong')
             })
     };
 
@@ -84,6 +81,7 @@ export default function AddProduct() {
                                     {...register("genre", { required: true })}
                                     className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm sm:leading-6"
                                 >
+                                    <option disabled>Select a category</option>
                                     <option>Anime</option>
                                     <option>Science</option>
                                     <option>Business</option>
@@ -139,7 +137,7 @@ export default function AddProduct() {
                         </div>
                         <div className="col-span-full">
                             <label htmlFor="image" className="block text-sm font-medium leading-6 text-gray-900">
-                                Photo
+                                Image
                             </label>
                             <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
                                 <div className="text-center">

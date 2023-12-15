@@ -25,16 +25,16 @@ export default function EditProduct() {
             body: formData
         })
             .then(res => res.json())
-            .then(res => {
-                console.log(res)
+            .then(async res => {
                 const imgUrl = res.data?.display_url;
                 data.image = imgUrl
-                updateProduct({ id: id, data: data })
-                    .then(() => {
-                        toast.success('Product edited successfully')
-                        navigate(0)
-                    })
-                    .catch(() => toast.error('Unauthorize user request'))
+                try {
+                    await updateProduct({ id: id, data: data });
+                    toast.success('Product edited successfully');
+                    navigate(0);
+                } catch {
+                    return toast.error('Unauthorize user request');
+                }
             })
     }
 

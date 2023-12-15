@@ -18,7 +18,7 @@ export default function SignIn() {
   } = useForm<IAuth>();
 
   const onSubmit = (data: IAuth) => {
-    console.log(data)
+    // console.log(data)
     signIn(data)
       .unwrap()
       .then((res) => {

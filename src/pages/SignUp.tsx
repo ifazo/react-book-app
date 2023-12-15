@@ -3,12 +3,9 @@ import { toast } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useSignUpMutation } from "../app/api/apiSlice";
 import { IAuth } from "../types";
-import { useAppDispatch } from "../app/hook";
-import { setUser } from "../app/features/userSlice";
 
 export default function SignUp() {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const { register, handleSubmit, formState: { errors } } = useForm<IAuth>()
   const [ signUp ] = useSignUpMutation()
 
@@ -19,7 +16,6 @@ export default function SignUp() {
         toast.success("User created successfully!");
         navigate("/sign-in");
       }).catch(() => {
-        dispatch(setUser(null));
         localStorage.removeItem("token");
         toast.error("User creation failed!");
       })
