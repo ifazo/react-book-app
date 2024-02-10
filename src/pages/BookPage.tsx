@@ -3,8 +3,8 @@ import { Dialog, Disclosure, Menu, Popover, Transition } from '@headlessui/react
 import { XIcon } from '@heroicons/react/outline'
 import { ChevronDownIcon, SearchIcon } from '@heroicons/react/solid'
 import { Link } from 'react-router-dom'
-import { IProduct } from '../types'
 import { useGetProductsBySearchQuery } from '../app/api/apiSlice'
+import { IBook } from '../types'
 
 const sortOptions = [
     { name: 'Most Popular', href: '#' },
@@ -37,12 +37,12 @@ function classNames(...classes: string[]) {
 }
 
 export default function ProductFilters() {
-    const [ open, setOpen ] = useState(false)
-    const [ search, setSearch ] = useState('')
+    const [open, setOpen] = useState(false)
+    const [search, setSearch] = useState('')
     const searchRef = useRef<HTMLInputElement>(null);
 
-    const { data } = useGetProductsBySearchQuery(search)
-
+    const { data: books } = useGetProductsBySearchQuery(search)
+    if (!books) return <div>Loading...</div>
     const handleSearch = () => {
         setSearch(searchRef.current?.value || '')
     }
@@ -304,28 +304,28 @@ export default function ProductFilters() {
                     </div>
 
                     <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-0 lg:gap-x-8">
-                        {data?.map((product: IProduct) => (
-                            <div key={product._id} className="group relative">
+                        {books?.map((book: IBook) => (
+                            <div key={book._id} className="group relative my-2 mx-1">
                                 <div className="w-full h-56 bg-gray-200 rounded-md overflow-hidden group-hover:opacity-75 lg:h-72 xl:h-80">
                                     <img
-                                        src={product.image}
+                                        src={book.thumbnailUrl}
                                         alt="book cover"
                                         className="w-full h-full object-center object-cover"
                                     />
                                 </div>
                                 <h3 className="mt-2 text-center text-sm font-bold text-gray-900">
-                                    <Link to={`/books/${product._id}`}>
+                                    <Link to={`/books/${book._id}`}>
                                         <span className="absolute inset-0" />
-                                        {product.title}
+                                        {book.title}
                                     </Link>
                                 </h3>
                                 <div className="flex justify-between">
-                                    <p className="mt-1 text-sm font-medium text-gray-700">{product.author}</p>
-                                    <p className="mt-1 text-sm font-medium text-gray-700">${product.price}</p>
+                                    <p className="mt-1 text-sm font-medium text-gray-700">{book.authors[0]}</p>
+                                    <p className="mt-1 text-sm font-medium text-gray-700">{book.categories[0]}</p>
                                 </div>
                                 <div className="flex justify-between">
-                                    <p className="mt-1 text-center text-sm font-medium text-gray-700">{product.genre}</p>
-                                    <p className="mt-1 text-center text-sm font-medium text-gray-700">{product.date}</p>
+                                    <p className="mt-1 text-center text-sm font-medium text-gray-700">{book.isbn}</p>
+                                    <p className="mt-1 text-center text-sm font-medium text-gray-700">{book.pageCount}</p>
                                 </div>
                             </div>
                         ))}

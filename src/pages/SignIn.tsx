@@ -6,6 +6,7 @@ import { useSignInMutation } from "../app/api/apiSlice";
 import { useAppDispatch } from "../app/hook";
 import { User, setUser } from "../app/features/userSlice";
 import { jwtDecode } from "jwt-decode";
+import logo from "../assets/react.svg";
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -49,7 +50,7 @@ export default function SignIn() {
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
             className="mx-auto h-10 w-auto"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+            src={logo}
             alt="Your Company"
           />
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
@@ -69,7 +70,7 @@ export default function SignIn() {
                   type="email"
                   placeholder="email"
                   {...register("email", { required: true })}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
                 {errors.email && <span>Password field is required</span>}
               </div>
@@ -92,7 +93,7 @@ export default function SignIn() {
                   type="password"
                   placeholder="password"
                   {...register("password", { required: true })}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
                 {errors.password && <span>Password field is required</span>}
               </div>

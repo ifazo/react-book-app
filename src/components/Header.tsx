@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from '../app/hook'
 import { toast } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
 import { setUser } from '../app/features/userSlice'
+import logo from "../assets/react.svg";
 
 export default function Header() {
   const dispatch = useAppDispatch();
@@ -43,12 +44,12 @@ export default function Header() {
                 <div className="flex-shrink-0 flex items-center">
                   <img
                     className="block lg:hidden h-8 w-auto"
-                    src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+                    src={logo}
                     alt="Workflow"
                   />
                   <img
                     className="hidden lg:block h-8 w-auto"
-                    src="https://tailwindui.com/img/logos/workflow-logo-indigo-600-mark-gray-800-text.svg"
+                    src={logo}
                     alt="Workflow"
                   />
                 </div>

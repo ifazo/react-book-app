@@ -4,18 +4,19 @@ export interface IAuth {
   password: string;
 }
 
-export interface IProduct {
+export interface IBook {
   _id: string;
-  user: string;
   title: string;
-  price: number;
-  genre: string;
-  author: string;
-  date: string;
-  description: string;
-  image: string;
-  createdAt: string;
-  updatedAt: string;
+  isbn: string;
+  publicationDate: string;
+  pageCount: number;
+  thumbnailUrl: string;
+  shortDdescription: string;
+  longDescription: string;
+  authors: string[];
+  categories: string[];
+  email?: string;
+  date?: string;
 }
 
 export interface IReview {
@@ -35,5 +36,5 @@ export interface IStatus {
   status: string;
   title: string;
   author: string;
-  genre: string;
+  category: string;
 }

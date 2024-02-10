@@ -1,31 +1,30 @@
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useDeleteProductMutation, useGetProductByIdQuery, usePostStatusMutation } from '../app/api/apiSlice'
-import { StarIcon } from '@heroicons/react/solid'
 import { useState } from 'react'
 import Modal from './Modal'
 import toast from 'react-hot-toast'
 import { CalendarIcon, PencilAltIcon, TrashIcon, UserIcon } from '@heroicons/react/outline'
 import { useAppSelector } from '../app/hook'
 
-const reviews = { average: 4, totalCount: 1624 }
-
-function classNames(...classes: string[]) {
-    return classes.filter(Boolean).join(' ')
-}
+// function classNames(...classes: string[]) {
+//     return classes.filter(Boolean).join(' ')
+// }
 
 export default function ProductDetails() {
     const navigate = useNavigate();
-    const [ open, setOpen ] = useState(false)
+    const [open, setOpen] = useState(false)
     const { id } = useParams();
-    const { data: product } = useGetProductByIdQuery(id as string);
-    // console.log(product)
+
+    const { data: book } = useGetProductByIdQuery(id as string);
+    // if (!book) return <div>Loading...</div>
+    // const { title, authors, categories, isbn, pageCount, longDescription, thumbnailUrl } = book as IBook
     const { user } = useAppSelector((state) => state.user);
-    console.log(user)
-    const [ postStatus ] = usePostStatusMutation()
-    const [ deleteProduct ] = useDeleteProductMutation()
+    
+    const [postStatus] = usePostStatusMutation()
+    const [deleteProduct] = useDeleteProductMutation()
 
     const handleStatus = () => {
-        postStatus({ status: 'wishlist', bookId: product._id, title: product.title, author: product.author, genre: product.genre })
+        postStatus({ status: 'wishlist', bookId: book._id, title: book.title, author: book.authors[0], category: book.categories[0] })
             .unwrap()
             .then(() => {
                 toast.success('Book added to wishlist')
@@ -69,7 +68,7 @@ export default function ProductDetails() {
                                         <path d="M5.555 17.776l8-16 .894.448-8 16-.894-.448z" />
                                     </svg>
                                     <Link to="/books" className="font-medium text-gray-500 hover:text-gray-900">
-                                        {product?.genre}
+                                        {book?.isbn}
                                     </Link>
                                 </div>
                             </li>
@@ -77,7 +76,7 @@ export default function ProductDetails() {
                     </nav>
 
                     <div className="mt-4">
-                        <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">{product?.title}</h1>
+                        <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">{book?.title}</h1>
                     </div>
 
                     <section aria-labelledby="information-heading" className="mt-4">
@@ -86,14 +85,14 @@ export default function ProductDetails() {
                         </h2>
 
                         <div className="flex items-center">
-                            <p className="text-lg font-semibold text-gray-900 sm:text-xl">${product?.price}</p>
+                            <p className="text-lg font-semibold text-gray-900 sm:text-xl">Category: {book?.categories[0]}</p>
 
-                            <div className="ml-4 pl-4 border-l border-gray-300">
+                            {/* <div className="ml-4 pl-4 border-l border-gray-300">
                                 <h2 className="sr-only">Reviews</h2>
                                 <div className="flex items-center">
                                     <div>
                                         <div className="flex items-center">
-                                            {[ 0, 1, 2, 3, 4 ].map((rating) => (
+                                            {[0, 1, 2, 3, 4].map((rating) => (
                                                 <StarIcon
                                                     key={rating}
                                                     className={classNames(
@@ -108,22 +107,22 @@ export default function ProductDetails() {
                                     </div>
                                     <p className="ml-2 text-sm text-gray-500">{reviews.totalCount} reviews</p>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
 
                         <div className="flex justify-between">
                             <div className="mt-6 flex items-center">
                                 <UserIcon className="flex-shrink-0 w-5 h-5" aria-hidden="true" />
-                                <p className="ml-2 font-medium text-base text-gray-700">{product?.author}</p>
+                                <p className="ml-2 font-medium text-base text-gray-700">Author: {book?.authors[0]}</p>
                             </div>
                             <div className="mt-6 flex items-center">
                                 <CalendarIcon className="flex-shrink-0 w-5 h-5" aria-hidden="true" />
-                                <p className="ml-2 font-medium text-base text-gray-700">{product?.date}</p>
+                                <p className="ml-2 font-medium text-base text-gray-700">Page: {book?.pageCount}</p>
                             </div>
                         </div>
 
                         <div className="mt-4 space-y-6">
-                            <p className="text-base text-gray-500">{product?.description}</p>
+                            <p className="text-base text-gray-500">{book?.longDescription}</p>
                         </div>
                     </section>
                 </div>
@@ -131,7 +130,7 @@ export default function ProductDetails() {
                 {/* Product image */}
                 <div className="mt-10 lg:mt-0 lg:col-start-2 lg:row-span-2 lg:self-center">
                     <div className="aspect-w-1 aspect-h-1 rounded-lg overflow-hidden">
-                        <img src={product?.image} alt="cover" className="w-full h-full object-center object-cover" />
+                        <img src={book?.thumbnailUrl} alt="cover" className="w-full h-full object-center object-cover" />
                     </div>
                 </div>
 
@@ -143,10 +142,10 @@ export default function ProductDetails() {
                         </h2>
 
                         <form>
-                            {user?.email === product?.email ? (
+                            {user?.email === book?.email ? (
                                 <div className="flex justify-between">
                                     <Link
-                                        to={`/books/edit/${id}`}
+                                        to={`/books/edit/${book?._id}`}
                                         type="button"
                                         className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                     >

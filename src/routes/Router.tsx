@@ -4,12 +4,12 @@ import HomePage from "../pages/HomePage";
 import ErrorPage from "../pages/ErrorPage";
 import SignIn from "../pages/SignIn";
 import SignUp from "../pages/SignUp";
-import AddProducts from "../pages/AddProduct";
-import ProductCategory from "../pages/ProductCategory";
+import ProductCategory from "../pages/BookPage";
 import ProductDetailsPage from "../pages/ProductDetailsPage";
 import DashboardPage from "../pages/DashboardPage";
-import EditProduct from "../pages/EditProduct";
 import PrivateRouter from "./PrivateRouter";
+import AddBook from "../pages/AddBook";
+import EditBook from "../pages/EditBook";
 
 const router = createBrowserRouter([
     {
@@ -30,11 +30,11 @@ const router = createBrowserRouter([
             },
             {
                 path: "/books/add",
-                element: <PrivateRouter><AddProducts /></PrivateRouter>
+                element: <PrivateRouter><AddBook /></PrivateRouter>
             },
             {
                 path: "/books/edit/:id",
-                element: <PrivateRouter><EditProduct /></PrivateRouter>
+                element: <PrivateRouter><EditBook /></PrivateRouter>
             }
         ]
     },
